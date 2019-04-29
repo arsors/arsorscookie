@@ -17,13 +17,11 @@ Enough of the advertisement, let's get into action. On the Arsors.Cookie Website
 ---
 
 ## Installation
-You can download Arsors.Cookie from [GitHub](https://github.com/arsors/arsorscookie) or install it via **composer** or **bower**. Simply copy the appropriate commandline and quickly add the plugin to your project.
-`composer require arsors-cookie`
-`bower install arsors-cookie`
+You can download Arsors.Cookie from [GitHub](https://github.com/arsors/arsorscookie).
 
-Then Just add the arsors.cookie.min.js before the `</body>` closing tag.
+Then insert the file at the beginning of the `<head>` area so that it is loaded as soon as possible.
 ```html
-<script src="https://raw.githubusercontent.com/arsors/cookie/master/arsors.cookie.min.js"></script>
+<script src="https://raw.githubusercontent.com/arsors/arsorscookie/master/dist/arsors.cookie.min.js"></script>
 ```
 Take a look at the section below to see a basic example or the full power of configuration.
 
