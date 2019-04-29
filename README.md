@@ -16,7 +16,7 @@ Enough of the advertisement, let's get into action. On the Arsors.Cookie Website
 ---
 
 ## Installation
-You can download Arsors.Cookie from [GitHub](https://github.com/arsors/cookie) or install it via **composer** or **bower**. Simply copy the appropriate commandline and quickly add the plugin to your project.
+You can download Arsors.Cookie from [GitHub](https://github.com/arsors/arsorscookie) or install it via **composer** or **bower**. Simply copy the appropriate commandline and quickly add the plugin to your project.
 `composer require arsors-cookie`
 `bower install arsors-cookie`
 
@@ -366,6 +366,7 @@ var globalConfig = {
 if (locationType != false) var myCookie = new arsorsCookie(mergeConfig); // locationType != false prevent loading the cookie notice while searching for the country code by a external service
 ```
 **Tip** Here is a wonderful list of services to get the the country code from IPs: https://stackoverflow.com/questions/391979/how-to-get-clients-ip-address-using-javascript
+
 **Remember** In some country it is not allow to read the IP adress of the visitor and search the country code by IP. This function as well as the whole plugin is used at your own risk.
 
 ### getTypeByCountryCode()
