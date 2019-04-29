@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="../dist/arsors.cookie.css">
+<script src="../dist/arsors.cookie.min.js"></script>
+<style>
+  /*
+    Not part of Arsors.Cookie CSS
+  */
+  .reponsive-video {
+    position: relative;
+  }
+  .reponsive-video:before {
+    content: "";
+    display: block;
+    padding-top: 56.25%;
+  }
+  .reponsive-video iframe {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  .eventHandlers a {
+    padding: 5px 15px;
+    background: #E84A5F;
+    color: white;
+    text-decoration: none;
+    font-family: Arial;
+    font-size: 12px;
+  }
+  .eventHandlers a:nth-child(odd) {
+    background: #99B898;
+  }
+</style>
+</head>
+<body>
+
+<h2>Main Cookie:</h2>
+<p>This cookie is the main cookie. It must always be specified and has 3 required options. Any type of content can be hidden by a cookie error message.</p>
+<div class="arsorsCookie_main">
+  <p>If you can see this container you have accepted the main cookie. Remember to delete your cookies if you want to see the cookie message when you reload the page.</p>
+</div>
+
+<hr>
+
+<h2>Map Cookie:</h2>
+<p>Here in the demo you see three different cookie error messages for the same map cookie. You can create as many different error messages as you want.</p>
+<div id="maps">
+  <div style='height:300px;width:100%;'>
+    <iframe width="" height="300" data-src=https://maps.google.de/maps?q=germany&hl=de&t=&z=5&ie=utf8&iwloc=b&output=embed frameborder="0" scrolling="no" marginheight="0" marginwidth="0" style='height:300px;width:100%;'></iframe>
+  </div>
+</div>
+
+<h2>Other Map Cookie:</h2>
+<p>You can create the wrapper as ID or Class and use it accordingly. If you like, you can also create two different cookie elements for maps. So the user has to agree to two different map cookies to see both map contents.</p>
+<div class="maps">
+  <div style='height:300px;width:100%;'>
+    <iframe width="" height="300" data-src=https://maps.google.de/maps?q=nrw&hl=de&t=&z=5&ie=utf8&iwloc=b&output=embed frameborder="0" scrolling="no" marginheight="0" marginwidth="0" style='height:300px;width:100%;'></iframe>
+  </div>
+</div>
+<h2>And another Map Cookie:</h2>
+<div class="maps">
+  <div style='height:300px;width:100%;'>
+    <iframe width="" height="300" data-src=https://maps.google.de/maps?q=berlin&hl=de&t=&z=5&ie=utf8&iwloc=b&output=embed frameborder="0" scrolling="no" marginheight="0" marginwidth="0" style='height:300px;width:100%;'></iframe>
+  </div>
+</div>
+
+<hr>
+
+<h2>YouTube Cookie:</h2>
+<p>Whether iFrame, text, image or video: any content can be blocked. All you have to do is pack your element into a wrapper and give it an ID or a Class.</p>
+<div id="youtube">
+  <div class="reponsive-video">
+    <iframe width="560" height="315" data-src="https://www.youtube.com/embed/fJ9rUzIMcZQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  </div>
+</div>
+
+<hr>
+
+<h2>Main Cookie, again:</h2>
+<p>If you create the cookie name as a Class you can use the error message repeatedly.</p>
+<div class="arsorsCookie_main">
+  <p>Maybe this text container can read your private data? I don't think so.</p>
+</div>
+
+<hr>
+
+<h2>Event Handler</h2>
+<p>Each cookie can be used with the option to automatically generate Allow and Deny links.</p>
+<div class="eventHandlers">
+  <a href="#" class="btn-allowCookie">Allow Main</a>
+  <a href="#" class="btn-denyCookie">Deny Main</a> |
+  <a href="#" class="btn-allowCookie-maps">Allow Maps</a>
+  <a href="#" class="btn-denyCookie-maps">Deny Maps</a> |
+  <a href="#" class="btn-allowCookie-yt">Allow YT</a>
+  <a href="#" class="btn-denyCookie-yt">Deny YT</a> |
+  <a href="#" class="btn-allowCookie-all">Allow All</a>
+  <a href="#" class="btn-denyCookie-all">Deny All</a>
+</div>
+
+<script>
+// https://stackoverflow.com/questions/391979/how-to-get-clients-ip-address-using-javascript search the correct service for you
+
+/*
+// IF WE DON'T KNOW THE COUNTRY CODE WE HAVE TO USE A SERVICE
+var locationType = arsorsCookie(false).setCountryCode(function() {
+  // get content of api
+  var xmlhttp = new XMLHttpRequest();
+  var url = 'http://api.ipinfodb.com/v3/ip-country/?format=json&key=YOUR-KEY&ip=YOUR-IP';
+
+  xmlhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      var json = JSON.parse(this.responseText);
+      if (json.statusCode == "OK") {
+        arsorsCookie(false).setCookie("arsorsCookie_countryCode", json.countryCode, 365);
+        location.reload();
+      } else {
+        arsorsCookie(false).setCookie("arsorsCookie_countryCode", "false", 365);
+        location.reload();
+      }
+    }
+    if (this.readyState == 4 && this.status == 0) {
+      arsorsCookie(false).setCookie("arsorsCookie_countryCode", "false", 365);
+      location.reload();
+    }
+  };
+  xmlhttp.open("GET", url, true);
+  xmlhttp.send();
+}, "<h1>This is my private HTML. Searching for the correct privacy policy...</h2>");
+*/
+
+// IF WE NOW THE COUNTRY CODE WE CAN JUST CHECK FOR CORRECT PRIVACY POLICY
+//var locationType = arsorsCookie(false).getTypeByCountryCode("DE");
+
+var lang = "en";
+
+var globalConfig = {
+/*
+    c: {
+      html: '{{floatingHtml}}<div class="arsorsCookie"><div class="arsorsCookie_text">{{htmlText}}</div><div class="arsorsCookie_options">{{createCookieOptions}}</div><div class="arsorsCookie_btnWrapper">{{locationHtml}}</div></div>',
+      type: locationType,
+      locationHtml: (locationType == "info") ? '{{info}}' : '{{deny}}{{allow}}',
+      info: '<a class="btn-toggleCookie arsorsCookie_btn" href="#">{{infoText}}</a>',
+      infoText: "Info"
+    },
+*/
+    e: {
+      '.arsorsCookie_main': {                                                   // .arsorsCookie_main is required
+        title: "Required",                                                      // is required
+        cookieName: "arsorsCookie_main",                                        // is required
+        btnClasses: {allow: 'btn-allowCookie', deny: "btn-denyCookie"},
+        scripts: ['main.js', 'jquery.js'],
+        script: 'document.onreadystatechange = function() { if (document.readyState === "complete") { console.log("loading complete"); } };',
+        //errorMsg: '<p>CUSTOM: You must accept cookies to view this content. <a class="btn-allowCookie-all" href="#">Accept Cookies</a></p>',
+        required: true
+      },
+      '#maps': {
+        title: "Map Modul",
+        cookieName: "arsorsCookie_maps",
+        btnClasses: {allow: 'btn-allowCookie-maps', deny: "btn-denyCookie-maps"},
+        scripts: ['maps.js'],
+        errorMsg: '<div class="ac_error"><p>You have to accept the Map Cookie module to see the location of the company. <a class="btn-allowCookie-maps" href="#">Allow Map Cookies (ID)</a></p></div>',
+        required: false
+      },
+      '.maps': {
+        title: "Map Modul",
+        cookieName: "arsorsCookie_maps",
+        btnClasses: {allow: 'btn-allowCookie-maps', deny: "btn-denyCookie-maps"},
+        scripts: ['maps.js'],
+        errorMsg: '<div class="ac_error_maps"><p>Different Map Msg.: You must accept the Map Cookie module to view Google Maps containers. <a class="btn-allowCookie-maps" href="#">Allow Map Cookies (Class)</a></p></div>',
+        required: false
+      },
+      '#youtube': {
+        title: "YouTube Modul",
+        cookieName: "arsorsCookie_yt",
+        btnClasses: {allow: 'btn-allowCookie-yt', deny: "btn-denyCookie-yt"},
+        scripts: ['youtube.js'],
+        errorMsg: '<div class="ac_error"><p>You need to accept the Video Cookie module to view YouTube videos. <a class="btn-allowCookie-yt" href="#">Allow YouTube Cookies</a></p></div>',
+        required: false
+      }
+    }
+};
+
+if (lang == "de") {
+  var langConfig = {
+    c: {
+        globalErrorMsg: 'Eine deutsche Fehlermeldung.'
+    }
+  };
+} else {
+  // Fallback
+  var langConfig = {
+    c: {
+        globalErrorMsg: 'An english error message.'
+    }
+  };
+}
+
+var mergeConfig = arsorsCookie(false).merge(globalConfig, langConfig);
+//if (locationType != false) var myCookie = new arsorsCookie(mergeConfig); // locationType != false prevent loading the cookie notice while searching for the country code by a external service
+var myCookie = new arsorsCookie(mergeConfig);
+</script>
+</body>
+</html>
