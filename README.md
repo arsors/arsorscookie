@@ -63,6 +63,7 @@ var myCookie = new arsorsCookie({
 | Chrome | FireFox | Edge | IE | Opera | Safari |
 |:-:|:-:|:-:|:-:|:-:|:-:|
 | 33 | 26 | 12 | 9* | 15 | 9 |
+
 \* *The css of Arsors.Cookie uses animations which are not supported in IE9*
 
 ### Mobile
