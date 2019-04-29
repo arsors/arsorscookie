@@ -5,6 +5,7 @@ Customizable cookie plugin with JavaScript blocker
 
 ## Introduction
 **TL;TR** Arsors.Cookie is fully customizable!
+
 Arsors.Cookie has everything you expect from a Cookie Plugin. You have full control over the HTML markup and can change and expand it as you like. You can block specific JavaScript Files, iFrames and any Content you whish. Thanks to the modular system, you can also manage as many cookies as you like! The user has the freedom to accept or deny each cookie separately. You can fully customize Arsors.Cookie. It comes with three different types of privacy policies: Opt-In, Opt-Out & Info Modus.
 Normally you would have to pay a monthly fee for such features. Arsors.Cookie breaks the rules as the first advanced open source Cookie Plugin!
 
