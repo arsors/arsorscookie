@@ -31,7 +31,7 @@ Take a look at the section below to see a basic example or the full power of con
 If you only want to set one single cookie which blocks content and loads/blocks the scripts automatically by Arsors.Cookie, you have to follow two steps:
 **First Step: JavaScript**
 ```html
-<script src="https://raw.githubusercontent.com/arsors/cookie/master/arsors.cookie.min.js"></script>
+<script src="https://raw.githubusercontent.com/arsors/arsorscookie/master/dist/arsors.cookie.min.js"></script>
 <script>
 var myCookie = new arsorsCookie({
     c : {
