@@ -3,7 +3,7 @@ function arsorsCookie(customConfig) {
   // Early access on robot that he can index the complete page
   this.stopIfRobot = function() {
     if (/bot|googlebot|crawler|spider|robot|crawling|google|baidu|bing|msn|duckduckbot|teoma|slurp|yandex/i.test(navigator.userAgent)) return true;
-  }
+  };
   if (this.stopIfRobot()) return false;
 
   var cookieObject = this;
@@ -11,7 +11,7 @@ function arsorsCookie(customConfig) {
   var cookieConfig = {
     c: {
       type: "opt-in",
-      html: '{{floatingHtml}}<div class="arsorsCookie"><div class="arsorsCookie_text">{{htmlText}}</div><div class="arsorsCookie_options">{{createCookieOptions}}</div><div class="arsorsCookie_btnWrapper">{{deny}}{{allow}}</div></div>',
+      html: '{{floatingHtml}}<div class="arsorsCookie"><div class="arsorsCookie_text">{{htmlText}}</div><div class="arsorsCookie_options">{{createCheckbox}}</div><div class="arsorsCookie_btnWrapper">{{deny}}{{allow}}</div></div>',
       htmlText: 'This website uses cookies. Some of these cookies require your explicit consent. Please agree to the use of cookies in order to use all functions of the website. Detailed information on the use of cookies can be found in our {{learnMore}}. Here you can also revoke your consent to the use of cookies.',
       learnMore: '<a href="{{learnMoreUrl}}" class="arsorsCookie_learnmore">{{learnMoreText}}</a>',
       learnMoreText: 'Privacy Policy',
@@ -177,7 +177,6 @@ function arsorsCookie(customConfig) {
 
     var elem = document.createElement('div');
     elem.innerHTML = content;
-    elem.className = "fuck";
     if (cookieObject.getCookie("arsorsCookie_interact") !== "true") elem.className="arsorsCookie_wrapper ac_show"; else elem.className="arsorsCookie_wrapper ac_hide";
     document.body.appendChild(elem);
 
@@ -197,17 +196,28 @@ function arsorsCookie(customConfig) {
 
   /*
     Create options for Cookie Consent Notice
-    Usage: include ${this.createCookieOptions()} into message or messagelink to create checkboxes
+    Usage: include ${this.createCheckbox()} into message or messagelink to create checkboxes
   */
-  this.createCookieOptions = function () {
+  this.createCheckbox = function(cookieKey) {
     var content = "";
     var includes = [];
     if (cookieConfig.c.type != "info") {
-      for (var key in cookieConfig.e) {
-        if (cookieConfig.e.hasOwnProperty(key) && !includes.includes(cookieConfig.e[key].cookieName)) {
-          var disabled = (cookieConfig.e[key].required) ? " disabled checked" : (this.isCookieAllowed(cookieConfig.e[key].cookieName) || (cookieConfig.c.type == "opt-in" && cookieObject.getCookie("arsorsCookie_interact") !== "true")) ? " checked" : "";
-          content += '<label><input id="' + cookieConfig.e[key].cookieName + '" type="checkbox" name="' + cookieConfig.e[key].cookieName + '"' + disabled + '> ' + cookieConfig.e[key].title + '</label> ';
-          includes.push(cookieConfig.e[key].cookieName);
+      if (!cookieKey.includes(".") && !cookieKey.includes("#")) {
+        // If all checkboxes should be drawn...
+        for (var key in cookieConfig.e) {
+          var tmpContent = this.createSingleCheckbox(key, includes);
+          if (tmpContent!="") {
+            content += tmpContent;
+            includes.push(cookieConfig.e[key].cookieName);
+          }
+        }
+      } else {
+        // If a specific checkbox should be drawn...
+        cookieKey = cookieKey.replace("{{createCheckbox","").replace("}}", "");
+        var tmpContent = this.createSingleCheckbox(cookieKey, includes);
+        if (tmpContent!="") {
+          content += tmpContent;
+          includes.push(cookieConfig.e[cookieKey].cookieName);
         }
       }
     }
@@ -215,10 +225,21 @@ function arsorsCookie(customConfig) {
   };
 
   /*
+    Create single checkbox
+  */
+  this.createSingleCheckbox = function(key, includes) {
+    if (cookieConfig.e.hasOwnProperty(key) && !includes.includes(cookieConfig.e[key].cookieName)) {
+      var disabled = (cookieConfig.e[key].required) ? " disabled checked" : (this.isCookieAllowed(cookieConfig.e[key].cookieName) || (cookieConfig.c.type == "opt-in" && cookieObject.getCookie("arsorsCookie_interact") !== "true")) ? " checked" : "";
+      return '<label id="' + cookieConfig.e[key].cookieName + '_wrapper"><input id="' + cookieConfig.e[key].cookieName + '" type="checkbox" name="' + cookieConfig.e[key].cookieName + '"' + disabled + '><span class="arsorsCookie_options_box"></span><span class="arsorsCookie_options_label"> ' + cookieConfig.e[key].title + '</span></label> ';
+    }
+    return "";
+  };
+
+  /*
     Replace {{tags}} by object property
   */
   this.replaceTags = function(content) {
-    var regex = /[\{]{2}([a-zA-Z0-1-_]*)[\}]{2}/gm;
+    var regex = /[\{]{2}([a-zA-Z0-1-_\.#]*)[\}]{2}/gm;
     var str = content;
     var html = str;
     var m;
@@ -229,8 +250,8 @@ function arsorsCookie(customConfig) {
       }
 
       // The result can be accessed through the `m`-variable.
-      if (m[0] !== "{{createCookieOptions}}") html = html.replace(m[0], cookieConfig.c[m[1]]);
-      else html = (cookieConfig.c.showOptions) ? html.replace(m[0], this.createCookieOptions()) : html.replace(m[0], "");
+      if (!m[0].includes("{{createCheckbox")) html = html.replace(m[0], cookieConfig.c[m[1]]);
+      else html = (cookieConfig.c.showOptions) ? html.replace(m[0], this.createCheckbox(m[0])) : html.replace(m[0], "");
     }
     if (html.includes("{{")) return this.replaceTags(html); else return html;
   };
