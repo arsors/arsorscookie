@@ -52,7 +52,7 @@ var myCookie = new arsorsCookie({
 ```html  
 <div class="arsorsCookie_main">  
     Just wrap an element with the class "arsorsCookie_main" around the content you want to block.  
-    <iframes src="get/blocked/too.html"></iframe>  
+    <iframes data-src="get/blocked/too.html"></iframe>  
 </div>  
 ```  
   
