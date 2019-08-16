@@ -341,8 +341,12 @@ function arsorsCookie(customConfig) {
     var elements, x;
     if (key != "all") {
       // allow
-      if (cookieConfig.e[key].btnClasses && cookieConfig.e[key].btnClasses.allow && document.getElementsByClassName(cookieConfig.e[key].btnClasses.allow)) {
-        elements = document.getElementsByClassName(cookieConfig.e[key].btnClasses.allow);
+      if (
+          cookieConfig.e[key].btnClasses &&
+          cookieConfig.e[key].btnClasses.allow &&
+          document.querySelectorAll("."+cookieConfig.e[key].btnClasses.allow+", [href='#"+cookieConfig.e[key].btnClasses.allow+"']")
+      ) {
+        elements = document.querySelectorAll("."+cookieConfig.e[key].btnClasses.allow+", [href='#"+cookieConfig.e[key].btnClasses.allow+"']");
         for (x = 0; x < elements.length; x++) {
           elements[x].onclick = function (e) {
             e.preventDefault();
@@ -353,8 +357,12 @@ function arsorsCookie(customConfig) {
         }
       }
       // deny
-      if (cookieConfig.e[key].btnClasses && cookieConfig.e[key].btnClasses.deny && document.getElementsByClassName(cookieConfig.e[key].btnClasses.deny)) {
-        elements = document.getElementsByClassName(cookieConfig.e[key].btnClasses.deny);
+      if (
+          cookieConfig.e[key].btnClasses &&
+          cookieConfig.e[key].btnClasses.deny &&
+          document.querySelectorAll("."+cookieConfig.e[key].btnClasses.deny+", [href='#"+cookieConfig.e[key].btnClasses.deny+"']")
+      ) {
+        elements = document.querySelectorAll("."+cookieConfig.e[key].btnClasses.deny+", [href='#"+cookieConfig.e[key].btnClasses.deny+"']");
         for (x = 0; x < elements.length; x++) {
           elements[x].onclick = function (e) {
             e.preventDefault();
@@ -366,8 +374,8 @@ function arsorsCookie(customConfig) {
       }
     } else {
       // allow all
-      if (document.getElementsByClassName("btn-allowCookie-all")) {
-        elements = document.getElementsByClassName("btn-allowCookie-all");
+      if (document.querySelectorAll(".btn-allowCookie-all, [href='#btn-allowCookie-all']")) {
+        elements = document.querySelectorAll(".btn-allowCookie-all, [href='#btn-allowCookie-all']");
         for (x = 0; x < elements.length; x++) {
           elements[x].onclick = function (e) {
             e.preventDefault();
@@ -376,8 +384,8 @@ function arsorsCookie(customConfig) {
         }
       }
       // allow selected
-      if (document.getElementsByClassName("btn-allowCookie-selected")) {
-        elements = document.getElementsByClassName("btn-allowCookie-selected");
+      if (document.querySelectorAll(".btn-allowCookie-selected, [href='#btn-allowCookie-selected']")) {
+        elements = document.querySelectorAll(".btn-allowCookie-selected, [href='#btn-allowCookie-selected']");
         for (x = 0; x < elements.length; x++) {
           elements[x].onclick = function (e) {
             e.preventDefault();
@@ -386,8 +394,8 @@ function arsorsCookie(customConfig) {
         }
       }
       // deny all
-      if (document.getElementsByClassName("btn-denyCookie-all")) {
-        elements = document.getElementsByClassName("btn-denyCookie-all");
+      if (document.querySelectorAll(".btn-denyCookie-all, [href='#btn-denyCookie-all']")) {
+        elements = document.querySelectorAll(".btn-denyCookie-all, [href='#btn-denyCookie-all']");
         for (x = 0; x < elements.length; x++) {
           elements[x].onclick = function (e) {
             e.preventDefault();
@@ -396,8 +404,8 @@ function arsorsCookie(customConfig) {
         }
       }
       // toggleCookieUi
-      if (document.getElementsByClassName("btn-toggleCookie")) {
-        elements = document.getElementsByClassName("btn-toggleCookie");
+      if (document.querySelectorAll(".btn-toggleCookie, [href='#btn-toggleCookie']")) {
+        elements = document.querySelectorAll(".btn-toggleCookie, [href='#btn-toggleCookie']");
         for (x = 0; x < elements.length; x++) {
           elements[x].onclick = function (e) {
             e.preventDefault();
