@@ -175,7 +175,7 @@ var myCookie = new arsorsCookie({
 ```  
   
 ### Event Handler  
-Every custom cookie can have its own Click EventHandler. It can be initialized by the property `btnClasses`. The property will create classes which you have to add to a HTML-Tag (such as button or a). That way you can place the button everywhere you want it in the frontend and enable the user to edit the custom cookie preferences afterwards. To allow or deny all cookies at a time there's a [predefined EventHandler](#predefined-click-eventHandler).  
+Every custom cookie can have its own Click EventHandler. It can be initialized by the property `btnClasses`. The property will create classes which you have to add to a HTML-Tag (such as button or a). You can also use the href-property, just place a # before the classname. See the examples below. That way you can place the button everywhere you want it in the frontend and enable the user to edit the custom cookie preferences afterwards. To allow or deny all cookies at a time there's a [predefined EventHandler](#predefined-click-eventHandler).
 ```js  
 var myCookie = new arsorsCookie({  
     e : {  
@@ -190,7 +190,7 @@ var myCookie = new arsorsCookie({
 Then you can add the following HTML where you want it:  
 ```html  
 <a href="#" class="btn-allowCookie">[...]</a>  
-<a href="#" class="btn-denyCookie">[...]</a>  
+<a href="#btn-denyCookie">[...]</a>  
 ```  
   
 ### Blocking Scripts  
