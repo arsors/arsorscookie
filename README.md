@@ -20,9 +20,16 @@ Enough of the advertisement, let's get into action. On the Arsors.Cookie Website
 ## Installation  
 You can download Arsors.Cookie from [GitHub](https://github.com/arsors/arsorscookie).  
   
-Then insert the file at the beginning of the `<head>` area so that it is loaded as soon as possible.  
+Then insert the file at the end of the `<body>` area  
 ```html  
-<script src="https://raw.githubusercontent.com/arsors/arsorscookie/master/dist/arsors.cookie.min.js"></script>  
+<html>
+  <head>
+  </head>
+  <body>
+    <!-- your content -->
+    <script src="https://raw.githubusercontent.com/arsors/arsorscookie/master/dist/arsors.cookie.min.js"></script> 
+  </body>
+</html>
 ```  
 Take a look at the section below to see a basic example or the full power of configuration.  
   
