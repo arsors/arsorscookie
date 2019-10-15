@@ -497,7 +497,22 @@ function arsorsCookieInitIFramesAndImages() {
     }
   } 
 }
-window.onload = arsorsCookieInitIFramesAndImages;
+ArsorsDOMReady(arsorsCookieInitIFramesAndImages);
+
+// THX to youmightnotneedjquery.com
+function ArsorsDOMReady(fn) {
+  if (document.readyState != 'loading') {
+    fn();
+  } else if (document.addEventListener) {
+    document.addEventListener('DOMContentLoaded', fn);
+  } else {
+    document.attachEvent('onreadystatechange', function() {
+      if (document.readyState != 'loading')
+        fn();
+    });
+  }
+}
+
 
 /*
   ------------------------
