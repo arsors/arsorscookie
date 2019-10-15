@@ -21,6 +21,10 @@
   line-height: 160%;
   border-top: 5px solid #E84A5F;
   z-index: 1000000;
+
+  /* if the cookie notice is heigher then the window */
+  max-height: calc(100% - 60px); /* 60px because we have a paddding of 30px */
+  overflow-y: auto;
 }
 .arsorsCookie_text {
   max-width: 1140px;
