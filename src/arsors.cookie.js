@@ -8,9 +8,14 @@ function arsorsCookie(customConfig) {
 
   var cookieObject = this;
 
+  var dynamicAllowHTML = [],
+      dynamicAllowHTMLInt = 0,
+      dynamicAllowInteract;
+
   var cookieConfig = {
     c: {
       type: "opt-in",
+      dynamicAllow: true,
       html: '{{floatingHtml}}<div class="arsorsCookie"><div class="arsorsCookie_text">{{htmlText}}</div><div class="arsorsCookie_options">{{createCheckbox}}</div><div class="arsorsCookie_btnWrapper">{{deny}}{{allow}}</div></div>',
       htmlText: 'This website uses cookies. Some of these cookies require your explicit consent. Please agree to the use of cookies in order to use all functions of the website. Detailed information on the use of cookies can be found in our {{learnMore}}. Here you can also revoke your consent to the use of cookies.',
       learnMore: '<a href="{{learnMoreUrl}}" class="arsorsCookie_learnmore">{{learnMoreText}}</a>',
@@ -67,7 +72,7 @@ function arsorsCookie(customConfig) {
       }
     }
     cookieObject.setCookie("arsorsCookie_interact", "true", cookieConfig.c.lifetime);
-    location.reload();
+    cookieObject.reload('all');
   };
 
   /*
@@ -81,7 +86,7 @@ function arsorsCookie(customConfig) {
     }
     if (reload !== false) {
       cookieObject.setCookie("arsorsCookie_interact", "true", cookieConfig.c.lifetime);
-      location.reload();
+      cookieObject.reload('all');
     }
   };
 
@@ -95,7 +100,7 @@ function arsorsCookie(customConfig) {
       }
     }
     cookieObject.setCookie("arsorsCookie_interact", "true", cookieConfig.c.lifetime);
-    location.reload();
+    cookieObject.reload(false);
   };
 
   /*
@@ -153,7 +158,7 @@ function arsorsCookie(customConfig) {
       if (callback) callback();
       return false;
     }
-  }
+  };
 
   this.getTypeByCountryCode = function(countryCode) {
     var optIn  = cookieConfig.c.optInArray,
@@ -161,7 +166,7 @@ function arsorsCookie(customConfig) {
     if (optIn.includes(countryCode)) return 'opt-in';
     else if (optOut.includes(countryCode)) return 'opt-out';
     else return 'info';
-  }
+  };
 
   /*
     ------------------------
@@ -266,11 +271,30 @@ function arsorsCookie(customConfig) {
       // Check for ID or Class and append Error Message Content
       if (container.startsWith("#")) {
         // For ID
-        if (document.getElementById(container.substr(1))) document.getElementById(container.substr(1)).innerHTML = content;
+        if (document.getElementById(container.substr(1))) {
+          var element = document.getElementById(container.substr(1));
+          if (cookieConfig.c.dynamicAllow) {
+            element.setAttribute('data-arsors-content', dynamicAllowHTMLInt);
+            dynamicAllowHTML[dynamicAllowHTMLInt] = [];
+            dynamicAllowHTML[dynamicAllowHTMLInt]['container'] = container;
+            dynamicAllowHTML[dynamicAllowHTMLInt]['cookie'] = cookieConfig.e[container].cookieName;
+            dynamicAllowHTML[dynamicAllowHTMLInt]['html'] = element.innerHTML;
+            dynamicAllowHTMLInt++;
+          }
+          element.innerHTML = content;
+        }
       } else if (container.startsWith(".")) {
         // For Classes
         var elements = document.getElementsByClassName(container.substr(1));
         for (var x = 0; x < elements.length; x++) {
+          if (cookieConfig.c.dynamicAllow) {
+            elements[x].setAttribute('data-arsors-content', dynamicAllowHTMLInt);
+            dynamicAllowHTML[dynamicAllowHTMLInt] = [];
+            dynamicAllowHTML[dynamicAllowHTMLInt]['container'] = container;
+            dynamicAllowHTML[dynamicAllowHTMLInt]['cookie'] = cookieConfig.e[container].cookieName;
+            dynamicAllowHTML[dynamicAllowHTMLInt]['html'] = elements[x].innerHTML;
+            dynamicAllowHTMLInt++;
+          }
           elements[x].innerHTML = content;
         }
       } else alert("Can't decide if container-Parameter in cookieObject.setCookieErrorMessages() is a ID (#) or a class (.) Check cookieConfig.e");
@@ -352,7 +376,7 @@ function arsorsCookie(customConfig) {
             e.preventDefault();
             cookieObject.setCookie(cookieConfig.e[key].cookieName, "allow", cookieConfig.c.lifetime);
             //cookieObject.setCookie("arsorsCookie_interact", "true", cookieConfig.c.lifetime); // The cookie message should not disappear if you accept or reject single modules.
-            location.reload();
+            cookieObject.reload('single');
           };
         }
       }
@@ -368,7 +392,7 @@ function arsorsCookie(customConfig) {
             e.preventDefault();
             cookieObject.setCookie(cookieConfig.e[key].cookieName, "deny", cookieConfig.c.lifetime);
             //cookieObject.setCookie("arsorsCookie_interact", "true", cookieConfig.c.lifetime); // The cookie message should not disappear if you accept or reject single modules.
-            location.reload();
+            cookieObject.reload(false);
           };
         }
       }
@@ -429,6 +453,7 @@ function arsorsCookie(customConfig) {
     // Append <scripts></scripts>
     var elem = document.createElement('scripts');
     document.body.appendChild(elem);
+    if (cookieConfig.c.dynamicAllow) dynamicAllowInteract = cookieObject.getCookie('arsorsCookie_interact');
   };
 
   /*
@@ -450,6 +475,39 @@ function arsorsCookie(customConfig) {
       }
     });
     return current;
+  };
+
+  /*
+    Dynamic reload or location.reload
+    If dynamicAllow is true: If you click on "Allow single cookies", or the first interaction with Arsors.Cookie is the
+    button "Allow all" or "Allow selected", then the dynamic loading is used.
+  */
+  this.reload = function (allow) {
+    if (cookieConfig.c.dynamicAllow) {
+      // if single allow
+      if (allow === 'single') {
+        for (var key in dynamicAllowHTML) {
+          if (cookieObject.isCookieAllowed(dynamicAllowHTML[key]['cookie']))
+            document.querySelector('[data-arsors-content="' + key + '"]').innerHTML = dynamicAllowHTML[key]['html'];
+        }
+        dynamicAllowInteract = true;
+        arsorsCookieInitIFramesAndImages();
+      }
+      // if all allow but not interact
+      if (allow === 'all') {
+        if (!dynamicAllowInteract && cookieConfig.c.type === 'opt-in') {
+          for (var key in dynamicAllowHTML) {
+            if (cookieObject.isCookieAllowed(dynamicAllowHTML[key]['cookie']))
+              document.querySelector('[data-arsors-content="' + key + '"]').innerHTML = dynamicAllowHTML[key]['html'];
+          }
+          dynamicAllowInteract = true;
+          arsorsCookieInitIFramesAndImages();
+          cookieObject.toggleCookieUi();
+        } else location.reload();
+      }
+      // if deny
+      if (!allow) location.reload();
+    } else location.reload();
   };
 
   /*
@@ -491,9 +549,11 @@ function arsorsCookieInitIFramesAndImages() {
     for (var i=0; i<e.length; i++) {
     if(e[i].getAttribute('data-src')) {
       e[i].setAttribute('src',e[i].getAttribute('data-src'));
+      e[i].removeAttribute('data-src');
     }
     if(e[i].getAttribute('data-ac-src')) {
       e[i].setAttribute('src',e[i].getAttribute('data-ac-src'));
+      e[i].removeAttribute('data-ac-src');
     }
   } 
 }

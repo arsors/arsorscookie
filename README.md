@@ -1,7 +1,40 @@
 
 # Arsors.Cookie  
 Customizable cookie plugin with JavaScript blocker  
-  
+
+---
+
+## Table of contents
+- [Introduction](#introduction)
+- [Demonstration](#demonstration)
+- [Installation](#installation)
+- [Basic Example](#basic-example)
+- [Compatibility](#compatibility)
+- [Configuration (Config)](#configuration-config)
+    - [Change Privacy Policy](#change-privacy-policy)
+    - [Dynamic Allow](#dynamic-allow)
+    - [Custom HTML](#custom-html)
+        - [Cookie Notice](#cookie-notice)
+        - [Floating Button](#floating-button)
+    - [Checkbox Function](#checkbox-function)
+    - [Cookie Lifetime](#cookie-lifetime)
+    - [Global Error Message](#global-error-message)
+- [Configuration (Elements)](#configuration-elements)
+    - [Initialize a new Cookie](#initialize-a-new-cookie)
+    - [Event Handler](#event-handler)
+    - [Blocking Scripts](#blocking-scripts)
+    - [Blocking inline script](#blocking-inline-script)
+    - [Blocking iFrames or any Content](#blocking-iframes-or-any-content)
+    - [Custom Error Message](#custom-error-message)
+    - [Required](#required)
+- [Predefined Click EventHandler](#predefined-click-eventhandler)
+- [Multilingualism](#hypothetical-multilingualism)
+- [Location Service](#location-service)
+    - [setCountryCode()](#setcountrycode)
+    - [getTypeByCountryCode()](#gettypebycountrycode)
+- [Properties](#properties)
+- [Default Configuration of Arsors.Cookie](#default-configuration-of-arsorscookie)
+
 ---  
   
 ## Introduction  
@@ -80,7 +113,7 @@ var myCookie = new arsorsCookie({
   
 ---  
   
-## Configuration (Config)  
+## Configuration (Config)
 Arsors.Cookie configuration is segmented into two sections: one for the global settings and one for the cookie elements. The configuration is done by a JavaScript Object. In this section you will learn all about the global settings. The key `c` stands for `configuration`. All global settings belong in this section.  
   
 ### Change Privacy Policy  
@@ -92,7 +125,19 @@ var myCookie = new arsorsCookie({
     }  
 });  
 ```  
-  
+   
+### Dynamic Allow 
+With dynamic allow the blocked content is displayed without reloading the page completely. But there are a few rules how this works. If single event handlers are clicked to allow a cookie, dynamic loading is always used.
+
+The cookie message itself can also allow content dynamically, but once a cookie is allowed in any way, dynamic loading is disabled for the cookie message. The reason for this is that already loaded JavaScript files cannot be reliably removed. So in this case the page will be reloaded completely. To disable the "allow dynamic loading" function you can use the following code.
+```js  
+var myCookie = new arsorsCookie({  
+    c : {  
+        dynamicAllow: false  
+    }  
+});  
+```  
+
 ### Custom HTML  
 You can adjust the complete HTML markup as you like and work with template variables `{{variableName}}` which you can also use nested. Your custom HTML is wrapped into a `div` which you can't change. It has the classes `arsorsCookie_wrapper` for identification and `ac_show` or `ac_hide` for the different visibility status of the cookie notice. Template variables are rendered recursively. That means you need to start with the property `html` in `c` and can add a custom property `myCustomText` in `c` as well. After that you can insert the content of `myCustomText` into the `html` property like this: `html: "<p>{{myCustomText}}</p>"`. Have a look below for an example.  
   
@@ -420,6 +465,7 @@ Most of the shown properties are set in the default configuration of Arsors.Cook
 {  
     //c: {  
         //type: "string",             // default opt-in  
+        //dynamicAllow: boolean,      // default true
         //html: "string",  
         //showOptions: boolean,       // default true  
         //lifetime: integer,          // default 365 (days)  
@@ -447,6 +493,7 @@ Most of the shown properties are set in the default configuration of Arsors.Cook
 {  
     c: {  
         type: "opt-in",  
+        dynamicAllow: true,
         html: '{{floatingHtml}}<div class="arsorsCookie"><div class="arsorsCookie_text">{{htmlText}}</div><div class="arsorsCookie_options">{{createCheckbox}}</div><div class="arsorsCookie_btnWrapper">{{deny}}{{allow}}</div></div>',  
         htmlText: 'This website uses cookies. Some of these cookies require your explicit consent. Please agree to the use of cookies in order to use all functions of the website. Detailed information on the use of cookies can be found in our {{learnMore}}. Here you can also revoke your consent to the use of cookies.',  
         learnMore: '<a href="{{learnMoreUrl}}" class="arsorsCookie_learnmore">{{learnMoreText}}</a>',  
