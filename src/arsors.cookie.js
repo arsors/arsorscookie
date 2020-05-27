@@ -545,7 +545,7 @@ function arsorsCookie(customConfig) {
 }
 
 function arsorsCookieInitIFramesAndImages() {
-  var e = document.querySelectorAll('iframe,img');
+  var e = document.querySelectorAll('iframe,img,script');
     for (var i=0; i<e.length; i++) {
     if(e[i].getAttribute('data-src')) {
       e[i].setAttribute('src',e[i].getAttribute('data-src'));
