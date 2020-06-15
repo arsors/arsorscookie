@@ -27,6 +27,7 @@ Customizable cookie plugin with JavaScript blocker
     - [Blocking iFrames or any Content](#blocking-iframes-or-any-content)
     - [Custom Error Message](#custom-error-message)
     - [Required](#required)
+    - [forceUnchecked](#forceunchecked)
 - [Predefined Click EventHandler](#predefined-click-eventhandler)
 - [Multilingualism](#hypothetical-multilingualism)
 - [Location Service](#location-service)
@@ -319,6 +320,21 @@ var myCookie = new arsorsCookie({
     }  
 });  
 ```  
+
+### forceUnchecked  
+Using the [checkbox function](#checkbox-function) each custom cookie can forced to be unchecked.  
+```js  
+var myCookie = new arsorsCookie({  
+    e : {  
+        '.arsorsCookie_custom': {
+            title: "Custom",  
+            cookieName: "arsorsCookie_custom",  
+            forceUnchecked: true  
+        }  
+    }  
+});  
+```  
+
   
 ---  
   

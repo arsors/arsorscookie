@@ -234,8 +234,9 @@ function arsorsCookie(customConfig) {
   */
   this.createSingleCheckbox = function(key, includes) {
     if (cookieConfig.e.hasOwnProperty(key) && !includes.includes(cookieConfig.e[key].cookieName)) {
-      var disabled = (cookieConfig.e[key].required) ? " disabled checked" : (this.isCookieAllowed(cookieConfig.e[key].cookieName) || (cookieConfig.c.type == "opt-in" && cookieObject.getCookie("arsorsCookie_interact") !== "true")) ? " checked" : "";
-      return '<label id="' + cookieConfig.e[key].cookieName + '_wrapper"><input id="' + cookieConfig.e[key].cookieName + '" type="checkbox" name="' + cookieConfig.e[key].cookieName + '"' + disabled + '><span class="arsorsCookie_options_box"></span><span class="arsorsCookie_options_label"> ' + cookieConfig.e[key].title + '</span></label> ';
+      var disabled = (cookieConfig.e[key].required) ? " disabled" : "";
+      var checked = ((cookieConfig.e[key].required || this.isCookieAllowed(cookieConfig.e[key].cookieName) || (cookieConfig.c.type == "opt-in" && cookieObject.getCookie("arsorsCookie_interact") !== "true")) && cookieConfig.e[key].forceUnchecked != true) ? " checked" : "";
+      return '<label id="' + cookieConfig.e[key].cookieName + '_wrapper"><input id="' + cookieConfig.e[key].cookieName + '" type="checkbox" name="' + cookieConfig.e[key].cookieName + '"' + disabled + checked + '><span class="arsorsCookie_options_box"></span><span class="arsorsCookie_options_label"> ' + cookieConfig.e[key].title + '</span></label> ';
     }
     return "";
   };
