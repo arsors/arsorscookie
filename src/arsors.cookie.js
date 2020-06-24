@@ -1,6 +1,6 @@
 function arsorsCookie(customConfig) {
   // check for deprecated functions
-  if (customConfig === false) console.error("arsorsCookie(false).merge() is deprecated. Use: arsorsCookie.prototype.merge() instead!");
+  if (customConfig === false) console.error("arsorsCookie(false) is deprecated. Use: arsorsCookie.prototype instead!");
 
   // Early access on robot that he can index the complete page
   if (/bot|googlebot|crawler|spider|robot|crawling|google|baidu|bing|msn|duckduckbot|teoma|slurp|yandex/i.test(navigator.userAgent)) return false;

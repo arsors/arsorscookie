@@ -396,7 +396,7 @@ This function called `getTypeByCountryCode()` inside and return like `getTypeByC
 ```js  
 // setCountryCode()  
 // IF WE DON'T KNOW THE COUNTRY CODE WE HAVE TO USE A SERVICE  
-var locationType = arsorsCookie(false).setCountryCode(function() {  
+var locationType = arsorsCookie.prototype.setCountryCode(function() {  
   // get content of api  
   var xmlhttp = new XMLHttpRequest();  
   var url = 'http://api.ipinfodb.com/v3/ip-country/?format=json&key=KEY&ip=IP';  
@@ -405,15 +405,15 @@ var locationType = arsorsCookie(false).setCountryCode(function() {
     if (this.readyState == 4 && this.status == 200) {  
       var json = JSON.parse(this.responseText);  
       if (json.statusCode == "OK") {  
-        arsorsCookie(false).setCookie("arsorsCookie_countryCode", json.countryCode, 365);  
+        arsorsCookie.prototype.setCookie("arsorsCookie_countryCode", json.countryCode, 365);  
         location.reload();  
       } else {  
-        arsorsCookie(false).setCookie("arsorsCookie_countryCode", "false", 365);  
+        arsorsCookie.prototype.setCookie("arsorsCookie_countryCode", "false", 365);  
         location.reload();  
       }  
     }  
     if (this.readyState == 4 && this.status == 0) {  
-      arsorsCookie(false).setCookie("arsorsCookie_countryCode", "false", 365);  
+      arsorsCookie.prototype.setCookie("arsorsCookie_countryCode", "false", 365);  
       location.reload();  
     }  
   };  
@@ -442,7 +442,7 @@ if (locationType != false) var myCookie = new arsorsCookie(mergeConfig); // loca
 ### getTypeByCountryCode()  
 If you know already the country code of your customer then you can use the `getTypeByCountryCode()` method. The method will return the `type` of the cookie notice behavior. Simply set the country code as parameter and Arsors.Cookie will return you the law of the country code.  
 ```js  
-var locationType = arsorsCookie(false).getTypeByCountryCode("DE");  
+var locationType = arsorsCookie.prototype.getTypeByCountryCode("DE");  
 ```  
 **Tip** If Arsors.Cookie didn't reply the correct law of the country code you can customize the law settings by setting the `c.optInArray` and `c.optOutArray`.  
 ```js  
@@ -456,7 +456,7 @@ var locationType = arsorsCookie(false).getTypeByCountryCode("DE");
 #### Example  
 ```js  
 // getTypeByCountryCode()  
-var locationType = arsorsCookie(false).getTypeByCountryCode("DE");  
+var locationType = arsorsCookie.prototype.getTypeByCountryCode("DE");  
   
 // Set global cookie config  
 var globalConfig = {  
