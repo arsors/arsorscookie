@@ -1,18 +1,17 @@
 function arsorsCookie(customConfig) {
+  // check for deprecated functions
+  if (customConfig === false) console.error("arsorsCookie(false).merge() is deprecated. Use: arsorsCookie.prototype.merge() instead!");
 
   // Early access on robot that he can index the complete page
-  this.stopIfRobot = function() {
-    if (/bot|googlebot|crawler|spider|robot|crawling|google|baidu|bing|msn|duckduckbot|teoma|slurp|yandex/i.test(navigator.userAgent)) return true;
-  };
-  if (this.stopIfRobot()) return false;
+  if (/bot|googlebot|crawler|spider|robot|crawling|google|baidu|bing|msn|duckduckbot|teoma|slurp|yandex/i.test(navigator.userAgent)) return false;
 
-  var cookieObject = this;
-
-  var dynamicAllowHTML = [],
-      dynamicAllowHTMLInt = 0,
-      dynamicAllowInteract;
-
-  var cookieConfig = {
+  // Set variables
+  this.dynamicAllowInteract = false;
+  this.dynamicAllowHTML = [];
+  this.initScriptsFromCookieMemory = [];
+  this.dynamicAllowHTMLInt = 0;
+  this.customConfig = customConfig;
+  this.cookieConfig = {
     c: {
       type: "opt-in",
       dynamicAllow: true,
@@ -41,79 +40,131 @@ function arsorsCookie(customConfig) {
     }
   };
 
-  /*
-    -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-  */
+  if (customConfig !== false) this.run();
+}
 
-  /*
-    ------------------------
-    Cookie Handler
-    ------------------------
-  */
+arsorsCookie.prototype = {
 
-  /*
-    Check if a specific cookie is on status allow
-  */
-  this.isCookieAllowed = function(cname) {
-    return (cookieObject.getCookie(cname) === "allow") ? true : false;
-  };
+  run: function() {
+    /*
+      Init all dependencies for arsorsCookie
+    */
+    /*  Merge Objects */
+    if (this.customConfig && typeof this.customConfig === "object") {
+      this.cookieConfig = this.merge(this.cookieConfig, this.customConfig);
+    }
 
-  /*
-    Set or Remove Cookies
-  */
-  this.allowOrDenySelectedCookies = function() {
-    for (var key in cookieConfig.e) {
-      if (cookieConfig.e.hasOwnProperty(key)) {
-        if (document.getElementById(cookieConfig.e[key].cookieName).checked) {
-          cookieObject.setCookie(cookieConfig.e[key].cookieName, "allow", cookieConfig.c.lifetime);
+    /* Append <scripts></scripts> */
+    var elem = document.createElement('scripts');
+    document.body.appendChild(elem);
+    if (this.cookieConfig.c.dynamicAllow) this.dynamicAllowInteract = this.getCookie('arsorsCookie_interact');
+
+    /* Init Cookies */
+    this.initCookies();
+    for (var key in this.cookieConfig.e) {
+      if (this.cookieConfig.e.hasOwnProperty(key)) {
+        /* INIT AND APPEND ERROR MESSAGES */
+        this.setCookieErrorMessages(key);
+        /* INIT EVENTLISTENER FOR LINKS */
+        this.initCookieEventListener(key);
+      }
+    }
+
+    /* INIT GLOBAL EVENTLISTENER FOR LINKS */
+    this.initCookieEventListener("all");
+
+    /* INIT SCRIPTS */
+    this.initScriptsFromCookies();
+
+    /* INIT UI */
+    this.initCookieUi();
+  },
+
+  merge: function(current, update) {
+    /*
+      Override Config Object
+    */
+    Object.keys(update).forEach(function(key) {
+      // if update[key] exist, and it's not a string or array,
+      // we go in one level deeper
+      if (
+        current.hasOwnProperty(key) &&
+        typeof current[key] === 'object' &&
+        !(current[key] instanceof Array)
+      ) {
+        arsorsCookie.prototype.merge(current[key], update[key]);
+      } else {
+        // if update[key] doesn't exist in current, or it's a string
+        // or array, then assign/overwrite current[key] to update[key]
+        current[key] = update[key];
+      }
+    });
+    return current;
+  },
+
+  isCookieAllowed: function(cname) {
+    /*
+      Check if a specific cookie is on status allow
+    */
+    return (this.getCookie(cname) === "allow") ? true : false;
+  },
+
+  allowOrDenySelectedCookies: function() {
+    /*
+      Set or Remove Cookies
+    */
+    for (var key in this.cookieConfig.e) {
+      if (this.cookieConfig.e.hasOwnProperty(key)) {
+        if (document.getElementById(this.cookieConfig.e[key].cookieName).checked) {
+          this.setCookie(this.cookieConfig.e[key].cookieName, "allow", this.cookieConfig.c.lifetime);
         } else {
-          cookieObject.setCookie(cookieConfig.e[key].cookieName, "deny", cookieConfig.c.lifetime);
+          this.setCookie(this.cookieConfig.e[key].cookieName, "deny", this.cookieConfig.c.lifetime);
         }
       }
     }
-    cookieObject.setCookie("arsorsCookie_interact", "true", cookieConfig.c.lifetime);
-    cookieObject.reload('all');
-  };
+    this.setCookie("arsorsCookie_interact", "true", this.cookieConfig.c.lifetime);
+    this.reload('all');
+  },
 
-  /*
-    Add all Cookies on allow
-  */
-  this.allowAllCookies = function(reload) {
-    for (var key in cookieConfig.e) {
-      if (cookieConfig.e.hasOwnProperty(key)) {
-        cookieObject.setCookie(cookieConfig.e[key].cookieName, "allow", cookieConfig.c.lifetime);
+  allowAllCookies: function(reload) {
+    /*
+      Add all Cookies on allow
+    */
+    for (var key in this.cookieConfig.e) {
+      if (this.cookieConfig.e.hasOwnProperty(key)) {
+        this.setCookie(this.cookieConfig.e[key].cookieName, "allow", this.cookieConfig.c.lifetime);
       }
     }
     if (reload !== false) {
-      cookieObject.setCookie("arsorsCookie_interact", "true", cookieConfig.c.lifetime);
-      cookieObject.reload('all');
+      this.setCookie("arsorsCookie_interact", "true", this.cookieConfig.c.lifetime);
+      this.reload('all');
     }
-  };
+  },
 
-  /*
-    Remove all Cookies on Deny
-  */
-  this.denyAllCookies = function() {
-    for (var key in cookieConfig.e) {
-      if (cookieConfig.e.hasOwnProperty(key)) {
-        cookieObject.setCookie(cookieConfig.e[key].cookieName, "deny", cookieConfig.c.lifetime);
+  denyAllCookies: function() {
+    /*
+      Remove all Cookies on Deny
+    */
+    for (var key in this.cookieConfig.e) {
+      if (this.cookieConfig.e.hasOwnProperty(key)) {
+        this.setCookie(this.cookieConfig.e[key].cookieName, "deny", this.cookieConfig.c.lifetime);
       }
     }
-    cookieObject.setCookie("arsorsCookie_interact", "true", cookieConfig.c.lifetime);
-    cookieObject.reload(false);
-  };
+    this.setCookie("arsorsCookie_interact", "true", this.cookieConfig.c.lifetime);
+    this.reload(false);
+  },
 
-  /*
-    Init Cookies (depends on cookie type)
-  */
-  this.initCookies = function() {
-    if ((cookieConfig.c.type === "opt-out" && cookieObject.getCookie(cookieConfig.e[".arsorsCookie_main"].cookieName) === "") || cookieConfig.c.type === "info") cookieObject.allowAllCookies(false);
-  };
+  initCookies: function() {
+    /*
+      Init Cookies (depends on cookie type)
+    */
+    if ((this.cookieConfig.c.type === "opt-out" && this.getCookie(this.cookieConfig.e[".arsorsCookie_main"].cookieName) === "") || this.cookieConfig.c.type === "info") this.allowAllCookies(false);
+  },
 
-  /*
-    Add Cookie manage functions to javascript
-  */
-  this.getCookie = function (cname) {
+  getCookie: function(cname) {
+    /*
+      Add Cookie manage to javascript
+    */
     var name = cname + "=";
     var decodedCookie = decodeURIComponent(document.cookie);
     var ca = decodedCookie.split(';');
@@ -127,30 +178,27 @@ function arsorsCookie(customConfig) {
       }
     }
     return "";
-  };
+  },
 
-  this.setCookie = function(cname, cvalue, exdays) {
+  setCookie: function(cname, cvalue, exdays) {
+    /*
+      Add Cookie manage to javascript
+    */
     var d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
     var expires = "expires=" + d.toUTCString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-  };
+  },
 
-  /*
-    ------------------------
-    Location Service Section
-    ------------------------
-  */
-
-  this.setCountryCode = function(callback, html, fallback) {
+  setCountryCode: function(callback, html, fallback) {
     var countryCode;
-    if (countryCode = cookieObject.getCookie('arsorsCookie_countryCode')) {
+    if (countryCode = this.getCookie('arsorsCookie_countryCode')) {
       if (countryCode == "false") {
         // fallback if can't get countryCode (countryCode-Cookie was set to false)
         return (fallback) ? fallback : 'opt-in';
       } else {
         // Has country code and decide which type should be used
-        return cookieObject.getTypeByCountryCode(countryCode);
+        return this.getTypeByCountryCode(countryCode);
       }
     } else {
       // Remove the content and show a message that the country get searched...
@@ -158,37 +206,34 @@ function arsorsCookie(customConfig) {
       if (callback) callback();
       return false;
     }
-  };
+  },
 
-  this.getTypeByCountryCode = function(countryCode) {
-    var optIn  = cookieConfig.c.optInArray,
-        optOut = cookieConfig.c.optOutArray;
+  getTypeByCountryCode: function(countryCode) {
+    var optIn  = this.cookieConfig.c.optInArray,
+        optOut = this.cookieConfig.c.optOutArray;
     if (optIn.includes(countryCode)) return 'opt-in';
     else if (optOut.includes(countryCode)) return 'opt-out';
     else return 'info';
-  };
+  },
 
-  /*
-    ------------------------
-    UI - Section
-    ------------------------
-  */
-
-  /*
-    Init the Cookie Ui
-  */
-  this.initCookieUi = function() {
-    var content = this.replaceTags(cookieConfig.c.html);
+  initCookieUi: function() {
+    /*
+      Init the Cookie Ui
+    */
+    var content = this.replaceTags(this.cookieConfig.c.html);
 
     var elem = document.createElement('div');
     elem.innerHTML = content;
-    if (cookieObject.getCookie("arsorsCookie_interact") !== "true") elem.className="arsorsCookie_wrapper ac_show"; else elem.className="arsorsCookie_wrapper ac_hide";
+    if (this.getCookie("arsorsCookie_interact") !== "true") elem.className="arsorsCookie_wrapper ac_show"; else elem.className="arsorsCookie_wrapper ac_hide";
     document.body.appendChild(elem);
 
     this.initCookieEventListener("all");
-  };
+  },
 
-  this.toggleCookieUi = function() {
+  toggleCookieUi: function() {
+    /*
+      Toggle the Cookie Ui
+    */
     var elements = document.getElementsByClassName('arsorsCookie_wrapper');
     for (var x = 0; x < elements.length; x++) {
       if (elements[x].className.includes('ac_hide')) {
@@ -197,23 +242,23 @@ function arsorsCookie(customConfig) {
         elements[x].className="arsorsCookie_wrapper ac_hide";
       }
     }
-  };
+  },
 
-  /*
-    Create options for Cookie Consent Notice
-    Usage: include ${this.createCheckbox()} into message or messagelink to create checkboxes
-  */
-  this.createCheckbox = function(cookieKey) {
+  createCheckbox: function(cookieKey) {
+    /*
+      Create options for Cookie Consent Notice
+      Usage: include ${this.createCheckbox()} into message or messagelink to create checkboxes
+    */
     var content = "";
     var includes = [];
-    if (cookieConfig.c.type != "info") {
+    if (this.cookieConfig.c.type != "info") {
       if (!cookieKey.includes(".") && !cookieKey.includes("#")) {
         // If all checkboxes should be drawn...
-        for (var key in cookieConfig.e) {
+        for (var key in this.cookieConfig.e) {
           var tmpContent = this.createSingleCheckbox(key, includes);
           if (tmpContent!="") {
             content += tmpContent;
-            includes.push(cookieConfig.e[key].cookieName);
+            includes.push(this.cookieConfig.e[key].cookieName);
           }
         }
       } else {
@@ -222,29 +267,29 @@ function arsorsCookie(customConfig) {
         var tmpContent = this.createSingleCheckbox(cookieKey, includes);
         if (tmpContent!="") {
           content += tmpContent;
-          includes.push(cookieConfig.e[cookieKey].cookieName);
+          includes.push(this.cookieConfig.e[cookieKey].cookieName);
         }
       }
     }
     return content;
-  };
+  },
 
-  /*
-    Create single checkbox
-  */
-  this.createSingleCheckbox = function(key, includes) {
-    if (cookieConfig.e.hasOwnProperty(key) && !includes.includes(cookieConfig.e[key].cookieName)) {
-      var disabled = (cookieConfig.e[key].required) ? " disabled" : "";
-      var checked = ((cookieConfig.e[key].required || this.isCookieAllowed(cookieConfig.e[key].cookieName) || (cookieConfig.c.type == "opt-in" && cookieObject.getCookie("arsorsCookie_interact") !== "true")) && cookieConfig.e[key].forceUnchecked != true) ? " checked" : "";
-      return '<label id="' + cookieConfig.e[key].cookieName + '_wrapper"><input id="' + cookieConfig.e[key].cookieName + '" type="checkbox" name="' + cookieConfig.e[key].cookieName + '"' + disabled + checked + '><span class="arsorsCookie_options_box"></span><span class="arsorsCookie_options_label"> ' + cookieConfig.e[key].title + '</span></label> ';
+  createSingleCheckbox: function(key, includes) {
+    /*
+      Create single checkbox
+    */
+    if (this.cookieConfig.e.hasOwnProperty(key) && !includes.includes(this.cookieConfig.e[key].cookieName)) {
+      var disabled = (this.cookieConfig.e[key].required) ? " disabled" : "";
+      var checked = ((this.cookieConfig.e[key].required || this.isCookieAllowed(this.cookieConfig.e[key].cookieName) || (this.cookieConfig.c.type == "opt-in" && this.getCookie("arsorsCookie_interact") !== "true")) && this.cookieConfig.e[key].forceUnchecked != true) ? " checked" : "";
+      return '<label id="' + this.cookieConfig.e[key].cookieName + '_wrapper"><input id="' + this.cookieConfig.e[key].cookieName + '" type="checkbox" name="' + this.cookieConfig.e[key].cookieName + '"' + disabled + checked + '><span class="arsorsCookie_options_box"></span><span class="arsorsCookie_options_label"> ' + this.cookieConfig.e[key].title + '</span></label> ';
     }
     return "";
-  };
+  },
 
-  /*
-    Replace {{tags}} by object property
-  */
-  this.replaceTags = function(content) {
+  replaceTags: function(content) {
+    /*
+      Replace {{tags}} by object property
+    */
     var regex = /[\{]{2}([a-zA-Z0-1-_\.#]*)[\}]{2}/gm;
     var str = content;
     var html = str;
@@ -256,31 +301,32 @@ function arsorsCookie(customConfig) {
       }
 
       // The result can be accessed through the `m`-variable.
-      if (!m[0].includes("{{createCheckbox")) html = html.replace(m[0], cookieConfig.c[m[1]]);
-      else html = (cookieConfig.c.showOptions) ? html.replace(m[0], this.createCheckbox(m[0])) : html.replace(m[0], "");
+      if (!m[0].includes("{{createCheckbox")) html = html.replace(m[0], this.cookieConfig.c[m[1]]);
+      else html = (this.cookieConfig.c.showOptions) ? html.replace(m[0], this.createCheckbox(m[0])) : html.replace(m[0], "");
     }
     if (html.includes("{{")) return this.replaceTags(html); else return html;
-  };
+  },
 
-  /*
-    Append Error Messages to the specific containers
-  */
-  cookieObject.setCookieErrorMessages = function(container) {
-    if (!this.isCookieAllowed(cookieConfig.e[container].cookieName)) {
-      // Get Error Message from cookieConfig.e
-      var content = (cookieConfig.e[container].errorMsg) ? cookieConfig.e[container].errorMsg : cookieConfig.c.globalErrorMsg;
+
+  setCookieErrorMessages: function(container) {
+    /*
+      Append Error Messages to the specific containers
+    */
+    if (!this.isCookieAllowed(this.cookieConfig.e[container].cookieName)) {
+      // Get Error Message from this.cookieConfig.e
+      var content = (this.cookieConfig.e[container].errorMsg) ? this.cookieConfig.e[container].errorMsg : this.cookieConfig.c.globalErrorMsg;
       // Check for ID or Class and append Error Message Content
       if (container.startsWith("#")) {
         // For ID
         if (document.getElementById(container.substr(1))) {
           var element = document.getElementById(container.substr(1));
-          if (cookieConfig.c.dynamicAllow) {
-            element.setAttribute('data-arsors-content', dynamicAllowHTMLInt);
-            dynamicAllowHTML[dynamicAllowHTMLInt] = [];
-            dynamicAllowHTML[dynamicAllowHTMLInt]['container'] = container;
-            dynamicAllowHTML[dynamicAllowHTMLInt]['cookie'] = cookieConfig.e[container].cookieName;
-            dynamicAllowHTML[dynamicAllowHTMLInt]['html'] = element.innerHTML;
-            dynamicAllowHTMLInt++;
+          if (this.cookieConfig.c.dynamicAllow) {
+            element.setAttribute('data-arsors-content', this.dynamicAllowHTMLInt);
+            this.dynamicAllowHTML[this.dynamicAllowHTMLInt] = [];
+            this.dynamicAllowHTML[this.dynamicAllowHTMLInt]['container'] = container;
+            this.dynamicAllowHTML[this.dynamicAllowHTMLInt]['cookie'] = this.cookieConfig.e[container].cookieName;
+            this.dynamicAllowHTML[this.dynamicAllowHTMLInt]['html'] = element.innerHTML;
+            this.dynamicAllowHTMLInt++;
           }
           element.innerHTML = content;
         }
@@ -288,55 +334,47 @@ function arsorsCookie(customConfig) {
         // For Classes
         var elements = document.getElementsByClassName(container.substr(1));
         for (var x = 0; x < elements.length; x++) {
-          if (cookieConfig.c.dynamicAllow) {
-            elements[x].setAttribute('data-arsors-content', dynamicAllowHTMLInt);
-            dynamicAllowHTML[dynamicAllowHTMLInt] = [];
-            dynamicAllowHTML[dynamicAllowHTMLInt]['container'] = container;
-            dynamicAllowHTML[dynamicAllowHTMLInt]['cookie'] = cookieConfig.e[container].cookieName;
-            dynamicAllowHTML[dynamicAllowHTMLInt]['html'] = elements[x].innerHTML;
-            dynamicAllowHTMLInt++;
+          if (this.cookieConfig.c.dynamicAllow) {
+            elements[x].setAttribute('data-arsors-content', this.dynamicAllowHTMLInt);
+            this.dynamicAllowHTML[this.dynamicAllowHTMLInt] = [];
+            this.dynamicAllowHTML[this.dynamicAllowHTMLInt]['container'] = container;
+            this.dynamicAllowHTML[this.dynamicAllowHTMLInt]['cookie'] = this.cookieConfig.e[container].cookieName;
+            this.dynamicAllowHTML[this.dynamicAllowHTMLInt]['html'] = elements[x].innerHTML;
+            this.dynamicAllowHTMLInt++;
           }
           elements[x].innerHTML = content;
         }
-      } else alert("Can't decide if container-Parameter in cookieObject.setCookieErrorMessages() is a ID (#) or a class (.) Check cookieConfig.e");
+      } else alert("Can't decide if container-Parameter in this.setCookieErrorMessages() is a ID (#) or a class (.) Check this.cookieConfig.e");
     }
-  };
+  },
 
-  /*
-    ------------------------
-    JavaScript Loading Handler
-    ------------------------
-  */
-
-  /*
-    Create scripts-Array. Depending on which cookies were set
-  */
-  var initScriptsFromCookieMemory = [];
-
-  this.initScriptsFromCookies = function() {
-    for (var key in cookieConfig.e) {
-      if (this.isCookieAllowed(cookieConfig.e[key].cookieName)) {
+  initScriptsFromCookies: function() {
+    /*
+      Create scripts-Array. Depending on which cookies were set
+    */
+    for (var key in this.cookieConfig.e) {
+      if (this.isCookieAllowed(this.cookieConfig.e[key].cookieName)) {
         // add scripts property
-        if (cookieConfig.e[key].scripts) {
-          for (var s = 0; s < cookieConfig.e[key].scripts.length; s++) {
-            if (!initScriptsFromCookieMemory.includes(cookieConfig.e[key].scripts[s])) {
-              initScriptsFromCookieMemory.push(cookieConfig.e[key].scripts[s]);
+        if (this.cookieConfig.e[key].scripts) {
+          for (var s = 0; s < this.cookieConfig.e[key].scripts.length; s++) {
+            if (!this.initScriptsFromCookieMemory.includes(this.cookieConfig.e[key].scripts[s])) {
+              this.initScriptsFromCookieMemory.push(this.cookieConfig.e[key].scripts[s]);
             }
           }
         }
         // add script property
-        if (cookieConfig.e[key].script) {
-          initScriptsFromCookieMemory.push('<singleScript>'+cookieConfig.e[key].script);
+        if (this.cookieConfig.e[key].script) {
+          this.initScriptsFromCookieMemory.push('<singleScript>'+this.cookieConfig.e[key].script);
         }
       }
     }
-    this.loadScriptsFromCookies(initScriptsFromCookieMemory);
-  };
+    this.loadScriptsFromCookies(this.initScriptsFromCookieMemory);
+  },
 
-  /*
-    Add and loads scripts
-  */
-  this.loadScriptsFromCookies = function(urls) {
+  loadScriptsFromCookies: function(urls) {
+    /*
+      Add and loads scripts
+    */
     var tag, content;
     for (var s = 0; s < urls.length; s++) {
       if (urls[s].startsWith('<singleScript>')) {
@@ -350,50 +388,45 @@ function arsorsCookie(customConfig) {
       }
       document.getElementsByTagName("scripts")[0].appendChild(tag);
     }
-  };
+  },
 
-  /*
-    ------------------------
-    Click Handler
-    ------------------------
-  */
-
-  /*
-    Create HTML-Classes for links to allow or deny cookies (outside the cookie consent notice)
-    USAGE: <a href="#" class="btnClasses.allow or btnClasses.deny">LINK TITLE</a>
-  */
-  this.initCookieEventListener = function(key) {
-    var elements, x;
+  initCookieEventListener: function(key) {
+    /*
+      Create HTML-Classes for links to allow or deny cookies (outside the cookie consent notice)
+      USAGE: <a href="#" class="btnClasses.allow or btnClasses.deny">LINK TITLE</a>
+    */
+    var elements, x,
+        ac = this;
     if (key != "all") {
       // allow
       if (
-          cookieConfig.e[key].btnClasses &&
-          cookieConfig.e[key].btnClasses.allow &&
-          document.querySelectorAll("."+cookieConfig.e[key].btnClasses.allow+", [href='#"+cookieConfig.e[key].btnClasses.allow+"']")
+          this.cookieConfig.e[key].btnClasses &&
+          this.cookieConfig.e[key].btnClasses.allow &&
+          document.querySelectorAll("."+this.cookieConfig.e[key].btnClasses.allow+", [href='#"+this.cookieConfig.e[key].btnClasses.allow+"']")
       ) {
-        elements = document.querySelectorAll("."+cookieConfig.e[key].btnClasses.allow+", [href='#"+cookieConfig.e[key].btnClasses.allow+"']");
+        elements = document.querySelectorAll("."+this.cookieConfig.e[key].btnClasses.allow+", [href='#"+this.cookieConfig.e[key].btnClasses.allow+"']");
         for (x = 0; x < elements.length; x++) {
           elements[x].onclick = function (e) {
             e.preventDefault();
-            cookieObject.setCookie(cookieConfig.e[key].cookieName, "allow", cookieConfig.c.lifetime);
-            //cookieObject.setCookie("arsorsCookie_interact", "true", cookieConfig.c.lifetime); // The cookie message should not disappear if you accept or reject single modules.
-            cookieObject.reload('single');
+            ac.setCookie(ac.cookieConfig.e[key].cookieName, "allow", ac.cookieConfig.c.lifetime);
+            //ac.setCookie("arsorsCookie_interact", "true", ac.cookieConfig.c.lifetime); // The cookie message should not disappear if you accept or reject single modules.
+            ac.reload('single');
           };
         }
       }
       // deny
       if (
-          cookieConfig.e[key].btnClasses &&
-          cookieConfig.e[key].btnClasses.deny &&
-          document.querySelectorAll("."+cookieConfig.e[key].btnClasses.deny+", [href='#"+cookieConfig.e[key].btnClasses.deny+"']")
+          this.cookieConfig.e[key].btnClasses &&
+          this.cookieConfig.e[key].btnClasses.deny &&
+          document.querySelectorAll("."+this.cookieConfig.e[key].btnClasses.deny+", [href='#"+this.cookieConfig.e[key].btnClasses.deny+"']")
       ) {
-        elements = document.querySelectorAll("."+cookieConfig.e[key].btnClasses.deny+", [href='#"+cookieConfig.e[key].btnClasses.deny+"']");
+        elements = document.querySelectorAll("."+this.cookieConfig.e[key].btnClasses.deny+", [href='#"+this.cookieConfig.e[key].btnClasses.deny+"']");
         for (x = 0; x < elements.length; x++) {
           elements[x].onclick = function (e) {
             e.preventDefault();
-            cookieObject.setCookie(cookieConfig.e[key].cookieName, "deny", cookieConfig.c.lifetime);
-            //cookieObject.setCookie("arsorsCookie_interact", "true", cookieConfig.c.lifetime); // The cookie message should not disappear if you accept or reject single modules.
-            cookieObject.reload(false);
+            ac.setCookie(ac.cookieConfig.e[key].cookieName, "deny", ac.cookieConfig.c.lifetime);
+            //ac.setCookie("arsorsCookie_interact", "true", ac.cookieConfig.c.lifetime); // The cookie message should not disappear if you accept or reject single modules.
+            ac.reload(false);
           };
         }
       }
@@ -404,7 +437,7 @@ function arsorsCookie(customConfig) {
         for (x = 0; x < elements.length; x++) {
           elements[x].onclick = function (e) {
             e.preventDefault();
-            cookieObject.allowAllCookies();
+            ac.allowAllCookies();
           };
         }
       }
@@ -414,7 +447,7 @@ function arsorsCookie(customConfig) {
         for (x = 0; x < elements.length; x++) {
           elements[x].onclick = function (e) {
             e.preventDefault();
-            cookieObject.allowOrDenySelectedCookies();
+            ac.allowOrDenySelectedCookies();
           };
         }
       }
@@ -424,7 +457,7 @@ function arsorsCookie(customConfig) {
         for (x = 0; x < elements.length; x++) {
           elements[x].onclick = function (e) {
             e.preventDefault();
-            cookieObject.denyAllCookies();
+            ac.denyAllCookies();
           };
         }
       }
@@ -434,114 +467,45 @@ function arsorsCookie(customConfig) {
         for (x = 0; x < elements.length; x++) {
           elements[x].onclick = function (e) {
             e.preventDefault();
-            cookieObject.toggleCookieUi();
+            ac.toggleCookieUi();
           };
         }
       }
     }
-  };
+  },
 
-  /*
-    ------------------------
-    Other important stuff
-    ------------------------
-  */
-
-  /*
-    Init all dependencies for arsorsCookie
-  */
-  this.__constructor = function() {
-    // Append <scripts></scripts>
-    var elem = document.createElement('scripts');
-    document.body.appendChild(elem);
-    if (cookieConfig.c.dynamicAllow) dynamicAllowInteract = cookieObject.getCookie('arsorsCookie_interact');
-  };
-
-  /*
-    Override Config Object
-  */
-  this.merge = function(current, update) {
-    Object.keys(update).forEach(function(key) {
-      // if update[key] exist, and it's not a string or array,
-      // we go in one level deeper
-      if (current.hasOwnProperty(key) &&
-          typeof current[key] === 'object' &&
-          !(current[key] instanceof Array)) {
-        cookieObject.merge(current[key], update[key]);
-
-      // if update[key] doesn't exist in current, or it's a string
-      // or array, then assign/overwrite current[key] to update[key]
-      } else {
-        current[key] = update[key];
-      }
-    });
-    return current;
-  };
-
-  /*
-    Dynamic reload or location.reload
-    If dynamicAllow is true: If you click on "Allow single cookies", or the first interaction with Arsors.Cookie is the
-    button "Allow all" or "Allow selected", then the dynamic loading is used.
-  */
-  this.reload = function (allow) {
-    if (cookieConfig.c.dynamicAllow) {
+  reload: function(allow) {
+    /*
+      Dynamic reload or location.reload
+      If dynamicAllow is true: If you click on "Allow single cookies", or the first interaction with Arsors.Cookie is the
+      button "Allow all" or "Allow selected", then the dynamic loading is used.
+    */
+    if (this.cookieConfig.c.dynamicAllow) {
       // if single allow
       if (allow === 'single') {
-        for (var key in dynamicAllowHTML) {
-          if (cookieObject.isCookieAllowed(dynamicAllowHTML[key]['cookie']))
-            document.querySelector('[data-arsors-content="' + key + '"]').innerHTML = dynamicAllowHTML[key]['html'];
+        for (var key in this.dynamicAllowHTML) {
+          if (this.isCookieAllowed(this.dynamicAllowHTML[key]['cookie']))
+            document.querySelector('[data-arsors-content="' + key + '"]').innerHTML = this.dynamicAllowHTML[key]['html'];
         }
-        dynamicAllowInteract = true;
+        this.dynamicAllowInteract = true;
         arsorsCookieInitIFramesAndImages();
       }
       // if all allow but not interact
       if (allow === 'all') {
-        if (!dynamicAllowInteract && cookieConfig.c.type === 'opt-in') {
-          for (var key in dynamicAllowHTML) {
-            if (cookieObject.isCookieAllowed(dynamicAllowHTML[key]['cookie']))
-              document.querySelector('[data-arsors-content="' + key + '"]').innerHTML = dynamicAllowHTML[key]['html'];
+        if (!this.dynamicAllowInteract && this.cookieConfig.c.type === 'opt-in') {
+          for (var key in this.dynamicAllowHTML) {
+            if (this.isCookieAllowed(this.dynamicAllowHTML[key]['cookie']))
+              document.querySelector('[data-arsors-content="' + key + '"]').innerHTML = this.dynamicAllowHTML[key]['html'];
           }
-          dynamicAllowInteract = true;
+          this.dynamicAllowInteract = true;
           arsorsCookieInitIFramesAndImages();
-          cookieObject.toggleCookieUi();
+          this.toggleCookieUi();
         } else location.reload();
       }
       // if deny
       if (!allow) location.reload();
     } else location.reload();
-  };
-
-  /*
-    ------------------------
-    Run Script
-    ------------------------
-  */
-  if (customConfig != false) {
-
-    /* Init all nessecary scripts */
-    this.__constructor();
-    /*  Merge Objects */
-    if (customConfig && typeof customConfig === "object") cookieConfig = this.merge(cookieConfig, customConfig);
-    /* Init Cookies */
-    this.initCookies();
-    for (var key in cookieConfig.e) {
-      if (cookieConfig.e.hasOwnProperty(key)) {
-        /* INIT AND APPEND ERROR MESSAGES */
-        cookieObject.setCookieErrorMessages(key);
-        /* INIT EVENTLISTENER FOR LINKS */
-        this.initCookieEventListener(key);
-      }
-    }
-    /* INIT GLOBAL EVENTLISTENER FOR LINKS */
-    this.initCookieEventListener("all");
-    /* INIT SCRIPTS */
-    this.initScriptsFromCookies();
-    /* INIT UI */
-    this.initCookieUi();
-
   }
-
-  return this;
 
 }
 
@@ -556,7 +520,7 @@ function arsorsCookieInitIFramesAndImages() {
       e[i].setAttribute('src',e[i].getAttribute('data-ac-src'));
       e[i].removeAttribute('data-ac-src');
     }
-  } 
+  }
 }
 ArsorsDOMReady(arsorsCookieInitIFramesAndImages);
 
@@ -573,7 +537,6 @@ function ArsorsDOMReady(fn) {
     });
   }
 }
-
 
 /*
   ------------------------

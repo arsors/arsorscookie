@@ -204,7 +204,7 @@ if (lang == "de") {
   };
 }
 
-var mergeConfig = arsorsCookie(false).merge(globalConfig, langConfig);
+var mergeConfig = arsorsCookie.prototype.merge(globalConfig, langConfig);
 //if (locationType != false) var myCookie = new arsorsCookie(mergeConfig); // locationType != false prevent loading the cookie notice while searching for the country code by a external service
 var myCookie = new arsorsCookie(mergeConfig);
 </script>
