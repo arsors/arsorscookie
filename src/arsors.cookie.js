@@ -51,7 +51,7 @@ arsorsCookie.prototype = {
     */
     /*  Merge Objects */
     if (this.customConfig && typeof this.customConfig === "object") {
-      this.cookieConfig = this.merge(this.cookieConfig, this.customConfig);
+      this.cookieConfig = this.merge(true, this.cookieConfig, this.customConfig);
     }
 
     /* Append <scripts></scripts> */
@@ -80,26 +80,41 @@ arsorsCookie.prototype = {
     this.initCookieUi();
   },
 
-  merge: function(current, update) {
+  merge: function () {
     /*
-      Override Config Object
-    */
-    Object.keys(update).forEach(function(key) {
-      // if update[key] exist, and it's not a string or array,
-      // we go in one level deeper
-      if (
-        current.hasOwnProperty(key) &&
-        typeof current[key] === 'object' &&
-        !(current[key] instanceof Array)
-      ) {
-        arsorsCookie.prototype.merge(current[key], update[key]);
-      } else {
-        // if update[key] doesn't exist in current, or it's a string
-        // or array, then assign/overwrite current[key] to update[key]
-        current[key] = update[key];
+     * Merge two or more objects together.
+     * (c) 2017 Chris Ferdinandi, MIT License, https://gomakethings.com
+     * @param   {Boolean}  deep     If true, do a deep (or recursive) merge [optional]
+     * @param   {Object}   objects  The objects to merge together
+     * @returns {Object}            Merged values of defaults and options
+     */
+    // Variables
+    var extended = {};
+    var deep = false;
+    var i = 0;
+    // Check if a deep merge
+    if ( Object.prototype.toString.call( arguments[0] ) === '[object Boolean]' ) {
+      deep = arguments[0];
+      i++;
+    }
+    // Merge the object into the extended object
+    var merge = function (obj) {
+      for (var prop in obj) {
+        if (obj.hasOwnProperty(prop)) {
+          // If property is an object, merge properties
+          if (deep && Object.prototype.toString.call(obj[prop]) === '[object Object]') {
+            extended[prop] = arsorsCookie.prototype.merge(extended[prop], obj[prop]);
+          } else {
+            extended[prop] = obj[prop];
+          }
+        }
       }
-    });
-    return current;
+    };
+    // Loop through each object and conduct a merge
+    for (; i < arguments.length; i++) {
+      merge(arguments[i]);
+    }
+    return extended;
   },
 
   isCookieAllowed: function(cname) {
