@@ -1,51 +1,51 @@
-function arsorsCookie(customConfig) {
-  // check for deprecated functions
-  if (customConfig === false) console.error("arsorsCookie(false) is deprecated. Use: arsorsCookie.prototype instead!");
+class ArsorsCookie {
+  
+  constructor(customConfig) {
+    // check for deprecated functions
+    if (customConfig === false) console.error("arsorsCookie(false) is deprecated. Use: arsorsCookie.prototype instead!");
 
-  // Early access on robot that he can index the complete page
-  if (/bot|googlebot|crawler|spider|robot|crawling|google|baidu|bing|msn|duckduckbot|teoma|slurp|yandex/i.test(navigator.userAgent)) return false;
+    // Early access on robot that he can index the complete page
+    if (/bot|googlebot|crawler|spider|robot|crawling|google|baidu|bing|msn|duckduckbot|teoma|slurp|yandex/i.test(navigator.userAgent)) return false;
 
-  // Set variables
-  this.dynamicAllowInteract = false;
-  this.dynamicAllowHTML = [];
-  this.initScriptsFromCookieMemory = [];
-  this.dynamicAllowHTMLInt = 0;
-  this.customConfig = customConfig;
-  this.cookieConfig = {
-    c: {
-      type: "opt-in",
-      dynamicAllow: true,
-      html: '{{floatingHtml}}<div class="arsorsCookie"><div class="arsorsCookie_text">{{htmlText}}</div><div class="arsorsCookie_options">{{createCheckbox}}</div><div class="arsorsCookie_btnWrapper">{{deny}}{{allow}}</div></div>',
-      htmlText: 'This website uses cookies. Some of these cookies require your explicit consent. Please agree to the use of cookies in order to use all functions of the website. Detailed information on the use of cookies can be found in our {{learnMore}}. Here you can also revoke your consent to the use of cookies.',
-      learnMore: '<a href="{{learnMoreUrl}}" class="arsorsCookie_learnmore">{{learnMoreText}}</a>',
-      learnMoreText: 'Privacy Policy',
-      learnMoreUrl: 'https://cookie.arsors.de/',
-      allow: '<a class="arsorsCookie_btn btn-allowCookie-selected" href="#">{{allowText}}</a>',
-      allowText: 'Allow Selected',
-      deny: '<a class="arsorsCookie_btn btn-denyCookie-all" href="#">{{denyText}}</a>',
-      denyText: 'Deny All',
-      floatingHtml: '<a class="btn-toggleCookie arsorsCookie_floatingBtn" href="#">{{floatingHtmlText}}</a>',
-      floatingHtmlText: 'Cookie Policy',
-      showOptions: true,
-      lifetime: 365,
-      globalErrorMsg: '<div class="ac_error"><p>You must accept cookies to view this content. <a class="btn-allowCookie-all" href="#">Accept Cookies</a></p></div>',
-      optInArray: ['HR', 'IT', 'ES'],
-      optOutArray: ['AT','BE','BG','CZ','CY','DE','DK','EE','FI','FR','EL','HU','IE','LV','LT','LU','MT','NL','PL','PT','SK','SE','GB','UK','GR','EU']
-    },
-    e: {
-      '.arsorsCookie_main': {             // .arsorsCookie_main is required
-        title: "Required",                // is required
-        cookieName: "arsorsCookie_main"   // is required
+    // Set variables
+    this.dynamicAllowInteract = false;
+    this.dynamicAllowHTML = [];
+    this.initScriptsFromCookieMemory = [];
+    this.dynamicAllowHTMLInt = 0;
+    this.customConfig = customConfig;
+    this.cookieConfig = {
+      c: {
+        type: "opt-in",
+        dynamicAllow: true,
+        html: '{{floatingHtml}}<div class="arsorsCookie"><div class="arsorsCookie_text">{{htmlText}}</div><div class="arsorsCookie_options">{{createCheckbox}}</div><div class="arsorsCookie_btnWrapper">{{deny}}{{allow}}</div></div>',
+        htmlText: 'This website uses cookies. Some of these cookies require your explicit consent. Please agree to the use of cookies in order to use all functions of the website. Detailed information on the use of cookies can be found in our {{learnMore}}. Here you can also revoke your consent to the use of cookies.',
+        learnMore: '<a href="{{learnMoreUrl}}" class="arsorsCookie_learnmore">{{learnMoreText}}</a>',
+        learnMoreText: 'Privacy Policy',
+        learnMoreUrl: 'https://cookie.arsors.de/',
+        allow: '<a class="arsorsCookie_btn btn-allowCookie-selected" href="#">{{allowText}}</a>',
+        allowText: 'Allow Selected',
+        deny: '<a class="arsorsCookie_btn btn-denyCookie-all" href="#">{{denyText}}</a>',
+        denyText: 'Deny All',
+        floatingHtml: '<a class="btn-toggleCookie arsorsCookie_floatingBtn" href="#">{{floatingHtmlText}}</a>',
+        floatingHtmlText: 'Cookie Policy',
+        showOptions: true,
+        lifetime: 365,
+        globalErrorMsg: '<div class="ac_error"><p>You must accept cookies to view this content. <a class="btn-allowCookie-all" href="#">Accept Cookies</a></p></div>',
+        optInArray: ['HR', 'IT', 'ES'],
+        optOutArray: ['AT','BE','BG','CZ','CY','DE','DK','EE','FI','FR','EL','HU','IE','LV','LT','LU','MT','NL','PL','PT','SK','SE','GB','UK','GR','EU']
+      },
+      e: {
+        '.arsorsCookie_main': {             // .arsorsCookie_main is required
+          title: "Required",                // is required
+          cookieName: "arsorsCookie_main"   // is required
+        }
       }
-    }
-  };
+    };
 
-  if (customConfig !== false) this.run();
-}
+    if (customConfig !== false) this.run();
+  }
 
-arsorsCookie.prototype = {
-
-  run: function() {
+  run() {
     /*
       Init all dependencies for arsorsCookie
     */
@@ -78,9 +78,10 @@ arsorsCookie.prototype = {
 
     /* INIT UI */
     this.initCookieUi();
-  },
+  }
 
-  merge: function () {
+  merge () {
+    const that = this;
     /*
      * Merge two or more objects together.
      * (c) 2017 Chris Ferdinandi, MIT License, https://gomakethings.com
@@ -103,7 +104,7 @@ arsorsCookie.prototype = {
         if (obj.hasOwnProperty(prop)) {
           // If property is an object, merge properties
           if (deep && Object.prototype.toString.call(obj[prop]) === '[object Object]') {
-            extended[prop] = arsorsCookie.prototype.merge(extended[prop], obj[prop]);
+            extended[prop] = that.merge(extended[prop], obj[prop]);
           } else {
             extended[prop] = obj[prop];
           }
@@ -115,16 +116,16 @@ arsorsCookie.prototype = {
       merge(arguments[i]);
     }
     return extended;
-  },
+  }
 
-  isCookieAllowed: function(cname) {
+  isCookieAllowed(cname) {
     /*
       Check if a specific cookie is on status allow
     */
     return (this.getCookie(cname) === "allow") ? true : false;
-  },
+  }
 
-  allowOrDenySelectedCookies: function() {
+  allowOrDenySelectedCookies() {
     /*
       Set or Remove Cookies
     */
@@ -139,9 +140,9 @@ arsorsCookie.prototype = {
     }
     this.setCookie("arsorsCookie_interact", "true", this.cookieConfig.c.lifetime);
     this.reload('all');
-  },
+  }
 
-  allowAllCookies: function(reload) {
+  allowAllCookies(reload) {
     /*
       Add all Cookies on allow
     */
@@ -154,9 +155,9 @@ arsorsCookie.prototype = {
       this.setCookie("arsorsCookie_interact", "true", this.cookieConfig.c.lifetime);
       this.reload('all');
     }
-  },
+  }
 
-  denyAllCookies: function() {
+  denyAllCookies() {
     /*
       Remove all Cookies on Deny
     */
@@ -167,16 +168,16 @@ arsorsCookie.prototype = {
     }
     this.setCookie("arsorsCookie_interact", "true", this.cookieConfig.c.lifetime);
     this.reload(false);
-  },
+  }
 
-  initCookies: function() {
+  initCookies() {
     /*
       Init Cookies (depends on cookie type)
     */
     if ((this.cookieConfig.c.type === "opt-out" && this.getCookie(this.cookieConfig.e[".arsorsCookie_main"].cookieName) === "") || this.cookieConfig.c.type === "info") this.allowAllCookies(false);
-  },
+  }
 
-  getCookie: function(cname) {
+  getCookie(cname) {
     /*
       Add Cookie manage to javascript
     */
@@ -193,9 +194,9 @@ arsorsCookie.prototype = {
       }
     }
     return "";
-  },
+  }
 
-  setCookie: function(cname, cvalue, exdays) {
+  setCookie(cname, cvalue, exdays) {
     /*
       Add Cookie manage to javascript
     */
@@ -203,9 +204,9 @@ arsorsCookie.prototype = {
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
     var expires = "expires=" + d.toUTCString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-  },
+  }
 
-  setCountryCode: function(callback, html, fallback) {
+  setCountryCode(callback, html, fallback) {
     var countryCode;
     if (countryCode = this.getCookie('arsorsCookie_countryCode')) {
       if (countryCode == "false") {
@@ -221,17 +222,17 @@ arsorsCookie.prototype = {
       if (callback) callback();
       return false;
     }
-  },
+  }
 
-  getTypeByCountryCode: function(countryCode) {
+  getTypeByCountryCode(countryCode) {
     var optIn  = this.cookieConfig.c.optInArray,
         optOut = this.cookieConfig.c.optOutArray;
     if (optIn.includes(countryCode)) return 'opt-in';
     else if (optOut.includes(countryCode)) return 'opt-out';
     else return 'info';
-  },
+  }
 
-  initCookieUi: function() {
+  initCookieUi() {
     /*
       Init the Cookie Ui
     */
@@ -243,9 +244,9 @@ arsorsCookie.prototype = {
     document.body.appendChild(elem);
 
     this.initCookieEventListener("all");
-  },
+  }
 
-  toggleCookieUi: function() {
+  toggleCookieUi() {
     /*
       Toggle the Cookie Ui
     */
@@ -257,9 +258,9 @@ arsorsCookie.prototype = {
         elements[x].className="arsorsCookie_wrapper ac_hide";
       }
     }
-  },
+  }
 
-  createCheckbox: function(cookieKey) {
+  createCheckbox(cookieKey) {
     /*
       Create options for Cookie Consent Notice
       Usage: include ${this.createCheckbox()} into message or messagelink to create checkboxes
@@ -287,9 +288,9 @@ arsorsCookie.prototype = {
       }
     }
     return content;
-  },
+  }
 
-  createSingleCheckbox: function(key, includes) {
+  createSingleCheckbox(key, includes) {
     /*
       Create single checkbox
     */
@@ -299,9 +300,9 @@ arsorsCookie.prototype = {
       return '<label id="' + this.cookieConfig.e[key].cookieName + '_wrapper"><input id="' + this.cookieConfig.e[key].cookieName + '" type="checkbox" name="' + this.cookieConfig.e[key].cookieName + '"' + disabled + checked + '><span class="arsorsCookie_options_box"></span><span class="arsorsCookie_options_label"> ' + this.cookieConfig.e[key].title + '</span></label> ';
     }
     return "";
-  },
+  }
 
-  replaceTags: function(content) {
+  replaceTags(content) {
     /*
       Replace {{tags}} by object property
     */
@@ -320,10 +321,10 @@ arsorsCookie.prototype = {
       else html = (this.cookieConfig.c.showOptions) ? html.replace(m[0], this.createCheckbox(m[0])) : html.replace(m[0], "");
     }
     if (html.includes("{{")) return this.replaceTags(html); else return html;
-  },
+  }
 
 
-  setCookieErrorMessages: function(container) {
+  setCookieErrorMessages(container) {
     /*
       Append Error Messages to the specific containers
     */
@@ -361,9 +362,9 @@ arsorsCookie.prototype = {
         }
       } else alert("Can't decide if container-Parameter in this.setCookieErrorMessages() is a ID (#) or a class (.) Check this.cookieConfig.e");
     }
-  },
+  }
 
-  initScriptsFromCookies: function() {
+  initScriptsFromCookies() {
     /*
       Create scripts-Array. Depending on which cookies were set
     */
@@ -384,9 +385,9 @@ arsorsCookie.prototype = {
       }
     }
     this.loadScriptsFromCookies(this.initScriptsFromCookieMemory);
-  },
+  }
 
-  loadScriptsFromCookies: function(urls) {
+  loadScriptsFromCookies(urls) {
     /*
       Add and loads scripts
     */
@@ -403,9 +404,9 @@ arsorsCookie.prototype = {
       }
       document.getElementsByTagName("scripts")[0].appendChild(tag);
     }
-  },
+  }
 
-  initCookieEventListener: function(key) {
+  initCookieEventListener(key) {
     /*
       Create HTML-Classes for links to allow or deny cookies (outside the cookie consent notice)
       USAGE: <a href="#" class="btnClasses.allow or btnClasses.deny">LINK TITLE</a>
@@ -487,9 +488,9 @@ arsorsCookie.prototype = {
         }
       }
     }
-  },
+  }
 
-  reload: function(allow) {
+  reload(allow) {
     /*
       Dynamic reload or location.reload
       If dynamicAllow is true: If you click on "Allow single cookies", or the first interaction with Arsors.Cookie is the
@@ -503,7 +504,7 @@ arsorsCookie.prototype = {
             document.querySelector('[data-arsors-content="' + key + '"]').innerHTML = this.dynamicAllowHTML[key]['html'];
         }
         this.dynamicAllowInteract = true;
-        arsorsCookieInitIFramesAndImages();
+        let x = new ArsorsCookieInitIFramesAndImages();
       }
       // if all allow but not interact
       if (allow === 'all') {
@@ -513,7 +514,7 @@ arsorsCookie.prototype = {
               document.querySelector('[data-arsors-content="' + key + '"]').innerHTML = this.dynamicAllowHTML[key]['html'];
           }
           this.dynamicAllowInteract = true;
-          arsorsCookieInitIFramesAndImages();
+          let x = new ArsorsCookieInitIFramesAndImages();
           this.toggleCookieUi();
         } else location.reload();
       }
@@ -524,34 +525,51 @@ arsorsCookie.prototype = {
 
 }
 
-function arsorsCookieInitIFramesAndImages() {
-  var e = document.querySelectorAll('iframe,img,script');
+class ArsorsCookieInitIFramesAndImages {
+  constructor() {
+    var e = document.querySelectorAll('iframe,img,script');
     for (var i=0; i<e.length; i++) {
-    if(e[i].getAttribute('data-src')) {
-      e[i].setAttribute('src',e[i].getAttribute('data-src'));
-      e[i].removeAttribute('data-src');
-    }
-    if(e[i].getAttribute('data-ac-src')) {
-      e[i].setAttribute('src',e[i].getAttribute('data-ac-src'));
-      e[i].removeAttribute('data-ac-src');
+      if(e[i].getAttribute('data-src')) {
+        e[i].setAttribute('src',e[i].getAttribute('data-src'));
+        e[i].removeAttribute('data-src');
+      }
+      if(e[i].getAttribute('data-ac-src')) {
+        e[i].setAttribute('src',e[i].getAttribute('data-ac-src'));
+        e[i].removeAttribute('data-ac-src');
+      }
     }
   }
 }
-ArsorsDOMReady(arsorsCookieInitIFramesAndImages);
 
 // THX to youmightnotneedjquery.com
-function ArsorsDOMReady(fn) {
-  if (document.readyState != 'loading') {
-    fn();
-  } else if (document.addEventListener) {
-    document.addEventListener('DOMContentLoaded', fn);
-  } else {
-    document.attachEvent('onreadystatechange', function() {
-      if (document.readyState != 'loading')
-        fn();
-    });
+class ArsorsDOMReady {
+  constructor(fn) {
+    if (document.readyState != 'loading') {
+      fn();
+    } else if (document.addEventListener) {
+      document.addEventListener('DOMContentLoaded', fn);
+    } else {
+      document.attachEvent('onreadystatechange', function() {
+        if (document.readyState != 'loading')
+          fn();
+      });
+    }
   }
 }
+let refresh = new ArsorsDOMReady(() =>
+    new ArsorsCookieInitIFramesAndImages()
+);
+
+// For node
+module.exports = {
+  ArsorsCookie,
+  ArsorsDOMReady,
+  ArsorsCookieInitIFramesAndImages
+}
+// For browserify
+global.ArsorsCookie = ArsorsCookie
+global.ArsorsCookieInitIFramesAndImages = ArsorsCookieInitIFramesAndImages
+global.ArsorsDOMReady = ArsorsDOMReady
 
 /*
   ------------------------
