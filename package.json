@@ -1,0 +1,35 @@
+{
+  "name": "arsorscookie",
+  "version": "0.3.0",
+  "description": "Arsors.Cookie has everything you expect from a Cookie Plugin. You have full control over the HTML markup and can change and expand it as you like. You can block specific JavaScript Files, iFrames and any Content you whish. Thanks to the modular system, you can also manage as many cookies as you like! The user has the freedom to accept or deny each cookie separately. You can fully customize Arsors.Cookie. It comes with three different types of privacy policies: Opt-In, Opt-Out & Info Modus.",
+  "main": "src/arsors.cookie.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arsors/arsorscookie.git"
+  },
+  "keywords": [
+    "Arsors",
+    "Cookie",
+    "Plugin",
+    "HTML",
+    "CSS",
+    "JavaScript",
+    "iFrame",
+    "Block",
+    "Modular",
+    "Opt-In",
+    "Opt-Out",
+    "Info",
+    "DSGVO",
+    "GDPR"
+  ],
+  "author": "Marvin Schieler",
+  "license": "LGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/arsors/arsorscookie/issues"
+  },
+  "homepage": "https://github.com/arsors/arsorscookie#readme"
+}

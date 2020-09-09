@@ -1,0 +1,65 @@
+{
+  "browserSyncSettings": {
+    "proxy": "http://arsorscookie.moon/demonstration",
+    "files": ["**/*"],
+    "enableEditable": false,
+    "enableVorlon": false
+  },
+  "scss": {
+    "srcPath": "./src/",
+    "srcFile": "arsors.cookie.scss",
+    "destPath": "./dist/",
+    "destFile": "arsors.cookie.min.css",
+    "scssSettings": {
+      "development": {
+        "outputStyle": "compressed"
+      },
+      "production": {
+        "outputStyle": "compressed"
+      }
+    }
+  },
+  "js": {
+    "srcPath": "./src/",
+    "srcFile": "arsors.cookie.js",
+    "destPath": "./dist/",
+    "destFile": "arsors.cookie.min.js",
+    "development": {
+      "browserifySettings": {
+        "transform": [
+          [
+            "babelify",
+            {
+              "comments": true,
+              "global": false,
+              "presets": [
+                "@babel/preset-env"
+              ]
+            }
+          ]
+        ]
+      },
+      "terser": {
+        "keep_fnames": true,
+        "mangle": false
+      }
+    },
+    "production": {
+      "browserifySettings": {
+        "transform": [
+          [
+            "babelify",
+            {
+              "comments": false,
+              "global": true,
+              "presets": [
+                "@babel/preset-env"
+              ]
+            }
+          ]
+        ]
+      },
+      "terser": {}
+    }
+  }
+}

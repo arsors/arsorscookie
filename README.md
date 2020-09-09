@@ -75,7 +75,7 @@ If you only want to set one single cookie which blocks content and loads/blocks 
 ```html  
 <script src="https://cdn.jsdelivr.net/gh/arsors/arsorscookie/dist/arsors.cookie.min.js"></script>  
 <script>  
-var myCookie = new arsorsCookie({  
+var myCookie = new ArsorsCookie({  
     c : {  
         type: 'opt-in'  
     },  
@@ -120,7 +120,7 @@ Arsors.Cookie configuration is segmented into two sections: one for the global s
 ### Change Privacy Policy  
 There are three different types of privacy policies: `opt-in`, `opt-out` & `info`. All you have to change is the `type` property in `c`.  
 ```js  
-var myCookie = new arsorsCookie({  
+var myCookie = new ArsorsCookie({  
     c : {  
         type: 'opt-in'  
     }  
@@ -132,7 +132,7 @@ With dynamic allow the blocked content is displayed without reloading the page c
 
 The cookie message itself can also allow content dynamically, but once a cookie is allowed in any way, dynamic loading is disabled for the cookie message. The reason for this is that already loaded JavaScript files cannot be reliably removed. So in this case the page will be reloaded completely. To disable the "allow dynamic loading" function you can use the following code.
 ```js  
-var myCookie = new arsorsCookie({  
+var myCookie = new ArsorsCookie({  
     c : {  
         dynamicAllow: false  
     }  
@@ -145,7 +145,7 @@ You can adjust the complete HTML markup as you like and work with template varia
 #### Cookie Notice  
 Create your custom cookie notice HTML with nested template variables.  
 ```js  
-var myCookie = new arsorsCookie({  
+var myCookie = new ArsorsCookie({  
     c : {  
         html: '<div class="arsorsCookie"><div class="arsorsCookie_text">{{myCustomText}}</div><div class="arsorsCookie_btnWrapper">{{deny}}{{allow}}</div></div>',  
         myCustomText: 'This website uses cookies. Some of these cookies require your explicit consent. Please agree to the use of cookies in order to use all functions of the website. Detailed information on the use of cookies can be found in our {{learnMore}}. Here you can also revoke your consent to the use of cookies.',  
@@ -165,7 +165,7 @@ As you can see we start with the required `html` property and insert the content
 When the user accepts or denies the cookies the cookie notice disappears. If you want to provide the possibility to display the cookie notice again, you could use a floating button. You decide how you want to implement it.  
 Arsors.Cookie generates a Click EventHandler for the class `btn-toggleCookie` by default. Just add this class to a button anywhere you want **or** add it as template variable and include it to your custom cookie notice HTML. For example:  
 ```js  
-var myCookie = new arsorsCookie({  
+var myCookie = new ArsorsCookie({  
     c : {  
         html: '{{floatingHtml}}<div class="arsorsCookie">[...]</div>',  
         floatingHtml: '<a class="btn-toggleCookie arsorsCookie_floatingBtn" href="#">{{floatingHtmlText}}</a>',  
@@ -182,7 +182,7 @@ If you want to render only a single checkbox you can append the key of the cooki
 ### Cookie Lifetime  
 You can change the global cookie lifetime with the property `lifetime` in `c`. This property must be set as an integer. The integer will be counted as days.  
 ```js  
-var myCookie = new arsorsCookie({  
+var myCookie = new ArsorsCookie({  
     c : {  
         lifetime: 365  
     }  
@@ -192,7 +192,7 @@ var myCookie = new arsorsCookie({
 ### Global Error Message  
 If you don't set up a custom error message for a custom cookie the default global error message will appear. Here is an example of how you can change it:  
 ```js  
-var myCookie = new arsorsCookie({  
+var myCookie = new ArsorsCookie({  
     c : {  
         globalErrorMsg: '<div class="ac_error"><p>You must accept cookies to view this content. <a class="btn-allowCookie-all" href="#">Accept Cookies</a></p></div>'  
     }  
@@ -209,7 +209,7 @@ If you want a checkbox to allow or deny each cookie then just [activate the chec
 To initialize a new custom cookie just add a new object to the `e` property with the minimum of these three required values: `Class/ID Name` as object key (and as HTML Class or ID for the [custom error message](#custom-error-message)), `title` as the title of the cookie and `cookieName` for the name of the cookie that shall be created.  
 Please keep in mind that Arsors.Cookie has already one predefined cookie `.arsorsCookie_main`. The first cookie key **has** to be `.arsorsCookie_main` otherwise you will recieve an error. Of course you can overwrite all properties of the predefined cookie.  
 ```js  
-var myCookie = new arsorsCookie({  
+var myCookie = new ArsorsCookie({  
     e : {  
         '.arsorsCookie_main': { // this key is predefined and must exist  
             title: "Required",  
@@ -230,7 +230,7 @@ var myCookie = new arsorsCookie({
 ### Event Handler  
 Every custom cookie can have its own Click EventHandler. It can be initialized by the property `btnClasses`. The property will create classes which you have to add to a HTML-Tag (such as button or a). You can also use the href-property, just place a # before the classname. See the examples below. That way you can place the button everywhere you want it in the frontend and enable the user to edit the custom cookie preferences afterwards. To allow or deny all cookies at a time there's a [predefined EventHandler](#predefined-click-eventHandler).
 ```js  
-var myCookie = new arsorsCookie({  
+var myCookie = new ArsorsCookie({  
     e : {  
         '.arsorsCookie_main': { // this key is predefined and must exist  
             title: "Required",  
@@ -249,7 +249,7 @@ Then you can add the following HTML where you want it:
 ### Blocking Scripts  
 Each custom cookie can block multiple JavaScript files. Therefore you need to reference these JavaScript files under the property `scripts` as an array. You can also add the same JavaScript file to multiple custom cookies. Arsors.Cookie will handle this and load the specific JavaScript file only once. The order in which you specify the scripts in the array also determines the order in which the scripts are loaded. When you initialize several cookies in a row the scripts will be loaded top to button.  
 ```js  
-var myCookie = new arsorsCookie({  
+var myCookie = new ArsorsCookie({  
     e : {  
         '.arsorsCookie_main': { // this key is predefined and must exist  
             title: "Required",  
@@ -273,7 +273,7 @@ When you want to combine the property `script` and `scripts` it could happen tha
 ### Blocking iFrames or any Content  
 The key of each custom cookie object needs to initialize as an ID `#name` or as a class `.name`. Then Arsors.Cookie creates for you the specific ID or Class as blocking container. All you have to do is wrap an element with the ID or Class around the content you want to block and change the `src`-Attribute of the iFrames or Images to `data-src` or `data-ac-src`. When the container gets blocked the global error message or the custom cookie error message will appear instead.  
 ```js  
-var myCookie = new arsorsCookie({  
+var myCookie = new ArsorsCookie({  
     e : {  
         '.arsorsCookie_main': { // this key is predefined and must exist  
             title: "Required",  
@@ -294,11 +294,11 @@ var myCookie = new arsorsCookie({
 ### Custom Error Message  
 When you [block iFrames or any content](#blocking-iframes-or-any-content) you can also show a custom error message. Each custom cookie can be provided with a custom error message. Just add the property `errorMsg`. If you also added the `btnClasses` ([Event Handler](#event-handler)) you can directly provide a link to accept the specific cookie in the custom error message.  
 ```js  
-var myCookie = new arsorsCookie({  
+var myCookie = new ArsorsCookie({  
     e : {  
         '.arsorsCookie_main': { // this key is predefined and must exist  
             title: "Required",  
-            cookieName: "arsorsCookie_main"  
+            cookieName: "arsorsCookie_main", 
             btnClasses: {allow: 'btn-allowCookie', deny: "btn-denyCookie"},  
             errorMsg: '<div class="ac_error"><p>CUSTOM: You must accept cookies to view this content. <a class="btn-allowCookie" href="#">Accept Cookies</a></p></div>'  
         }  
@@ -310,7 +310,7 @@ If you don't need a custom error message then just set the property `errorMsg` t
 ### Required  
 Using the [checkbox function](#checkbox-function) each custom cookie can be marked as `required`. Thus the user can't uncheck this one and only gets the two options to accept or deny all cookies.  
 ```js  
-var myCookie = new arsorsCookie({  
+var myCookie = new ArsorsCookie({  
     e : {  
         '.arsorsCookie_main': { // this key is predefined and must exist  
             title: "Required",  
@@ -324,7 +324,7 @@ var myCookie = new arsorsCookie({
 ### forceUnchecked  
 Using the [checkbox function](#checkbox-function) each custom cookie can forced to be unchecked.  
 ```js  
-var myCookie = new arsorsCookie({  
+var myCookie = new ArsorsCookie({  
     e : {  
         '.arsorsCookie_custom': {
             title: "Custom",  
@@ -372,8 +372,8 @@ if (lang == "de") {
     };  
 }  
   
-var mergeConfig = arsorsCookie.prototype.merge(true, globalConfig, langConfig);  
-var myCookie = new arsorsCookie(mergeConfig);  
+var mergeConfig = ArsorsCookie.prototype.merge(true, globalConfig, langConfig);  
+var myCookie = new ArsorsCookie(mergeConfig);  
 ```  
 **Other possibilities:** For Wordpress, Neos or any other content management system you could also use PHP to generate the JavaScript configuration with the appropriate texts in the desired language. You could also use i18n for the integration of the correct texts or you could write your own JavaScript function which returns the correct text via IDs. Be creative! There are lots of possibilities.  
   
@@ -396,7 +396,7 @@ This function called `getTypeByCountryCode()` inside and return like `getTypeByC
 ```js  
 // setCountryCode()  
 // IF WE DON'T KNOW THE COUNTRY CODE WE HAVE TO USE A SERVICE  
-var locationType = arsorsCookie.prototype.setCountryCode(function() {  
+var locationType = ArsorsCookie.prototype.setCountryCode(function() {  
   // get content of api  
   var xmlhttp = new XMLHttpRequest();  
   var url = 'http://api.ipinfodb.com/v3/ip-country/?format=json&key=KEY&ip=IP';  
@@ -405,15 +405,15 @@ var locationType = arsorsCookie.prototype.setCountryCode(function() {
     if (this.readyState == 4 && this.status == 200) {  
       var json = JSON.parse(this.responseText);  
       if (json.statusCode == "OK") {  
-        arsorsCookie.prototype.setCookie("arsorsCookie_countryCode", json.countryCode, 365);  
+        ArsorsCookie.prototype.setCookie("arsorsCookie_countryCode", json.countryCode, 365);  
         location.reload();  
       } else {  
-        arsorsCookie.prototype.setCookie("arsorsCookie_countryCode", "false", 365);  
+        ArsorsCookie.prototype.setCookie("arsorsCookie_countryCode", "false", 365);  
         location.reload();  
       }  
     }  
     if (this.readyState == 4 && this.status == 0) {  
-      arsorsCookie.prototype.setCookie("arsorsCookie_countryCode", "false", 365);  
+      ArsorsCookie.prototype.setCookie("arsorsCookie_countryCode", "false", 365);  
       location.reload();  
     }  
   };  
@@ -433,7 +433,7 @@ var globalConfig = {
 };  
   
 // Activate Arsors.Cookie if country code is set  
-if (locationType != false) var myCookie = new arsorsCookie(mergeConfig); // locationType != false prevent loading the cookie notice while searching for the country code by a external service  
+if (locationType != false) var myCookie = new ArsorsCookie(mergeConfig); // locationType != false prevent loading the cookie notice while searching for the country code by a external service  
 ```  
 **Tip** Here is a wonderful list of services to get the the country code from IPs: https://stackoverflow.com/questions/391979/how-to-get-clients-ip-address-using-javascript  
   
@@ -442,7 +442,7 @@ if (locationType != false) var myCookie = new arsorsCookie(mergeConfig); // loca
 ### getTypeByCountryCode()  
 If you know already the country code of your customer then you can use the `getTypeByCountryCode()` method. The method will return the `type` of the cookie notice behavior. Simply set the country code as parameter and Arsors.Cookie will return you the law of the country code.  
 ```js  
-var locationType = arsorsCookie.prototype.getTypeByCountryCode("DE");  
+var locationType = ArsorsCookie.prototype.getTypeByCountryCode("DE");  
 ```  
 **Tip** If Arsors.Cookie didn't reply the correct law of the country code you can customize the law settings by setting the `c.optInArray` and `c.optOutArray`.  
 ```js  
@@ -456,7 +456,7 @@ var locationType = arsorsCookie.prototype.getTypeByCountryCode("DE");
 #### Example  
 ```js  
 // getTypeByCountryCode()  
-var locationType = arsorsCookie.prototype.getTypeByCountryCode("DE");  
+var locationType = ArsorsCookie.prototype.getTypeByCountryCode("DE");  
   
 // Set global cookie config  
 var globalConfig = {  
@@ -470,7 +470,7 @@ var globalConfig = {
 };  
   
 // Activate Arsors.Cookie if country code is set  
-var myCookie = new arsorsCookie(mergeConfig);  
+var myCookie = new ArsorsCookie(mergeConfig);  
 ```  
   
 ---  
