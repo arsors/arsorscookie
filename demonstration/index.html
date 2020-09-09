@@ -5,7 +5,7 @@
 <title>Arsors Cookie Plugin Demonstration</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" type="text/css" href="../dist/arsors.cookie.css">
+<link rel="stylesheet" type="text/css" href="../dist/arsors.cookie.min.css">
 <script src="../dist/arsors.cookie.min.js"></script>
 <style>
   /*
@@ -111,7 +111,7 @@
 
 /*
 // IF WE DON'T KNOW THE COUNTRY CODE WE HAVE TO USE A SERVICE
-var locationType = arsorsCookie.prototype.setCountryCode(function() {
+var locationType = ArsorsCookie.prototype.setCountryCode(function() {
   // get content of api
   var xmlhttp = new XMLHttpRequest();
   var url = 'http://api.ipinfodb.com/v3/ip-country/?format=json&key=YOUR-KEY&ip=YOUR-IP';
@@ -120,15 +120,15 @@ var locationType = arsorsCookie.prototype.setCountryCode(function() {
     if (this.readyState == 4 && this.status == 200) {
       var json = JSON.parse(this.responseText);
       if (json.statusCode == "OK") {
-        arsorsCookie.prototype.setCookie("arsorsCookie_countryCode", json.countryCode, 365);
+        ArsorsCookie.prototype.setCookie("arsorsCookie_countryCode", json.countryCode, 365);
         location.reload();
       } else {
-        arsorsCookie.prototype.setCookie("arsorsCookie_countryCode", "false", 365);
+        ArsorsCookie.prototype.setCookie("arsorsCookie_countryCode", "false", 365);
         location.reload();
       }
     }
     if (this.readyState == 4 && this.status == 0) {
-      arsorsCookie.prototype.setCookie("arsorsCookie_countryCode", "false", 365);
+      ArsorsCookie.prototype.setCookie("arsorsCookie_countryCode", "false", 365);
       location.reload();
     }
   };
@@ -138,7 +138,7 @@ var locationType = arsorsCookie.prototype.setCountryCode(function() {
 */
 
 // IF WE NOW THE COUNTRY CODE WE CAN JUST CHECK FOR CORRECT PRIVACY POLICY
-//var locationType = arsorsCookie.prototype.getTypeByCountryCode("DE");
+//var locationType = ArsorsCookie.prototype.getTypeByCountryCode("DE");
 
 var lang = "en";
 
@@ -204,9 +204,9 @@ if (lang == "de") {
   };
 }
 
-var mergeConfig = arsorsCookie.prototype.merge(true, globalConfig, langConfig);
-//if (locationType != false) var myCookie = new arsorsCookie(mergeConfig); // locationType != false prevent loading the cookie notice while searching for the country code by a external service
-var myCookie = new arsorsCookie(mergeConfig);
+var mergeConfig = ArsorsCookie.prototype.merge(true, globalConfig, langConfig);
+//if (locationType != false) var myCookie = new ArsorsCookie(mergeConfig); // locationType != false prevent loading the cookie notice while searching for the country code by a external service
+var myCookie = new ArsorsCookie(mergeConfig);
 </script>
 </body>
 </html>
