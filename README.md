@@ -372,7 +372,7 @@ if (lang == "de") {
     };  
 }  
   
-var mergeConfig = ArsorsCookie.prototype.merge(true, globalConfig, langConfig);  
+var mergeConfig = ArsorsCookie.prototype.merge({}, globalConfig, langConfig);  
 var myCookie = new ArsorsCookie(mergeConfig);  
 ```  
 **Other possibilities:** For Wordpress, Neos or any other content management system you could also use PHP to generate the JavaScript configuration with the appropriate texts in the desired language. You could also use i18n for the integration of the correct texts or you could write your own JavaScript function which returns the correct text via IDs. Be creative! There are lots of possibilities.  

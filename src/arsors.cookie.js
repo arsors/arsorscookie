@@ -1,8 +1,8 @@
 class ArsorsCookie {
-  
+
   constructor(customConfig) {
     // check for deprecated functions
-    if (customConfig === false) console.error("arsorsCookie(false) is deprecated. Use: arsorsCookie.prototype instead!");
+    if (customConfig === false) console.error("arsorsCookie(false) is deprecated. Use: ArsorsCookie.prototype instead!");
 
     // Early access on robot that he can index the complete page
     if (/bot|googlebot|crawler|spider|robot|crawling|google|baidu|bing|msn|duckduckbot|teoma|slurp|yandex/i.test(navigator.userAgent)) return false;
@@ -51,7 +51,7 @@ class ArsorsCookie {
     */
     /*  Merge Objects */
     if (this.customConfig && typeof this.customConfig === "object") {
-      this.cookieConfig = this.merge(true, this.cookieConfig, this.customConfig);
+      this.cookieConfig = this.merge({}, this.cookieConfig, this.customConfig);
     }
 
     /* Append <scripts></scripts> */
@@ -80,42 +80,27 @@ class ArsorsCookie {
     this.initCookieUi();
   }
 
-  merge () {
+  isObject(item) {
+    return (item && typeof item === 'object' && !Array.isArray(item));
+  }
+
+  merge(target, ...sources) {
     const that = this;
-    /*
-     * Merge two or more objects together.
-     * (c) 2017 Chris Ferdinandi, MIT License, https://gomakethings.com
-     * @param   {Boolean}  deep     If true, do a deep (or recursive) merge [optional]
-     * @param   {Object}   objects  The objects to merge together
-     * @returns {Object}            Merged values of defaults and options
-     */
-    // Variables
-    var extended = {};
-    var deep = false;
-    var i = 0;
-    // Check if a deep merge
-    if ( Object.prototype.toString.call( arguments[0] ) === '[object Boolean]' ) {
-      deep = arguments[0];
-      i++;
-    }
-    // Merge the object into the extended object
-    var merge = function (obj) {
-      for (var prop in obj) {
-        if (obj.hasOwnProperty(prop)) {
-          // If property is an object, merge properties
-          if (deep && Object.prototype.toString.call(obj[prop]) === '[object Object]') {
-            extended[prop] = that.merge(extended[prop], obj[prop]);
-          } else {
-            extended[prop] = obj[prop];
-          }
+    if (!sources.length) return target;
+    const source = sources.shift();
+
+    if (that.isObject(target) && that.isObject(source)) {
+      for (const key in source) {
+        if (that.isObject(source[key])) {
+          if (!target[key]) Object.assign(target, {[key]: {}});
+          that.merge(target[key], source[key]);
+        } else {
+          Object.assign(target, {[key]: source[key]});
         }
       }
-    };
-    // Loop through each object and conduct a merge
-    for (; i < arguments.length; i++) {
-      merge(arguments[i]);
     }
-    return extended;
+
+    return that.merge(target, ...sources);
   }
 
   isCookieAllowed(cname) {
