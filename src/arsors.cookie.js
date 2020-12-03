@@ -546,12 +546,14 @@ let refresh = new ArsorsDOMReady(() =>
 );
 
 // For node
-module.exports = {
-  ArsorsCookie,
-  ArsorsDOMReady,
-  ArsorsCookieInitIFramesAndImages
+if (typeof exports === "object") {
+  module.exports = {
+    ArsorsCookie,
+    ArsorsDOMReady,
+    ArsorsCookieInitIFramesAndImages
+  }
+  // For browserify
+  global.ArsorsCookie = ArsorsCookie
+  global.ArsorsCookieInitIFramesAndImages = ArsorsCookieInitIFramesAndImages
+  global.ArsorsDOMReady = ArsorsDOMReady
 }
-// For browserify
-global.ArsorsCookie = ArsorsCookie
-global.ArsorsCookieInitIFramesAndImages = ArsorsCookieInitIFramesAndImages
-global.ArsorsDOMReady = ArsorsDOMReady
