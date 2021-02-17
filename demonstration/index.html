@@ -143,15 +143,16 @@ var locationType = ArsorsCookie.prototype.setCountryCode(function() {
 var lang = "en";
 
 var globalConfig = {
-/*
+///*
     c: {
-      html: '{{floatingHtml}}<div class="arsorsCookie"><div class="arsorsCookie_text">{{htmlText}}</div><div class="arsorsCookie_options">{{createCheckbox}}</div><div class="arsorsCookie_btnWrapper">{{locationHtml}}</div></div>',
-      type: locationType,
-      locationHtml: (locationType == "info") ? '{{info}}' : '{{deny}}{{allow}}',
-      info: '<a class="btn-toggleCookie arsorsCookie_btn" href="#">{{infoText}}</a>',
-      infoText: "Info"
+      // html: '{{floatingHtml}}<div class="arsorsCookie"><div class="arsorsCookie_text">{{htmlText}}</div><div class="arsorsCookie_options">{{createCheckbox}}</div><div class="arsorsCookie_btnWrapper">{{locationHtml}}</div></div>',
+      // type: locationType,
+      // locationHtml: (locationType == "info") ? '{{info}}' : '{{deny}}{{allow}}',
+      // info: '<a class="btn-toggleCookie arsorsCookie_btn" href="#">{{infoText}}</a>',
+      // infoText: "Info",
+      multiDomains: ['arsorscookie.moon','localhost']
     },
-*/
+//*/
     e: {
       '.arsorsCookie_main': {                                                   // .arsorsCookie_main is required
         title: "Required",                                                      // is required
@@ -204,7 +205,7 @@ if (lang == "de") {
   };
 }
 
-var mergeConfig = ArsorsCookie.prototype.merge(true, globalConfig, langConfig);
+var mergeConfig = ArsorsCookie.prototype.merge({}, globalConfig, langConfig);
 //if (locationType != false) var myCookie = new ArsorsCookie(mergeConfig); // locationType != false prevent loading the cookie notice while searching for the country code by a external service
 var myCookie = new ArsorsCookie(mergeConfig);
 </script>
