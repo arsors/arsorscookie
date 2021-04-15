@@ -13,6 +13,7 @@ Customizable cookie plugin with JavaScript blocker
 - [Configuration (Config)](#configuration-config)
     - [Change Privacy Policy](#change-privacy-policy)
     - [Dynamic Allow](#dynamic-allow)
+    - [Append Selector](#append-selector)
     - [Custom HTML](#custom-html)
         - [Cookie Notice](#cookie-notice)
         - [Floating Button](#floating-button)
@@ -138,6 +139,16 @@ var myCookie = new ArsorsCookie({
     }  
 });  
 ```  
+
+### Append Selector
+The html of cookie notice are append to the body by default. If you need to change that behavior you can adjust the appendSelector in the main config like:
+```js
+var myCookie = new ArsorsCookie({  
+    c : {  
+        appendSelector: '#your-custom-selector'  
+    }  
+});  
+```
 
 ### Custom HTML  
 You can adjust the complete HTML markup as you like and work with template variables `{{variableName}}` which you can also use nested. Your custom HTML is wrapped into a `div` which you can't change. It has the classes `arsorsCookie_wrapper` for identification and `ac_show` or `ac_hide` for the different visibility status of the cookie notice. Template variables are rendered recursively. That means you need to start with the property `html` in `c` and can add a custom property `myCustomText` in `c` as well. After that you can insert the content of `myCustomText` into the `html` property like this: `html: "<p>{{myCustomText}}</p>"`. Have a look below for an example.  
@@ -482,6 +493,7 @@ Most of the shown properties are set in the default configuration of Arsors.Cook
     //c: {  
         //type: "string",             // default opt-in  
         //dynamicAllow: boolean,      // default true
+        //appendSelector: "string',   // default 'body'
         //html: "string",  
         //showOptions: boolean,       // default true  
         //lifetime: integer,          // default 365 (days)  
@@ -510,6 +522,7 @@ Most of the shown properties are set in the default configuration of Arsors.Cook
     c: {  
         type: "opt-in",  
         dynamicAllow: true,
+        appendSelector: 'body',
         html: '{{floatingHtml}}<div class="arsorsCookie"><div class="arsorsCookie_text">{{htmlText}}</div><div class="arsorsCookie_options">{{createCheckbox}}</div><div class="arsorsCookie_btnWrapper">{{deny}}{{allow}}</div></div>',  
         htmlText: 'This website uses cookies. Some of these cookies require your explicit consent. Please agree to the use of cookies in order to use all functions of the website. Detailed information on the use of cookies can be found in our {{learnMore}}. Here you can also revoke your consent to the use of cookies.',  
         learnMore: '<a href="{{learnMoreUrl}}" class="arsorsCookie_learnmore">{{learnMoreText}}</a>',  

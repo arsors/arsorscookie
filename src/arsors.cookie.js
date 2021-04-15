@@ -17,6 +17,7 @@ class ArsorsCookie {
       c: {
         type: "opt-in",
         dynamicAllow: true,
+        appendSelector: 'body',
         html: '{{floatingHtml}}<div class="arsorsCookie"><div class="arsorsCookie_text">{{htmlText}}</div><div class="arsorsCookie_options">{{createCheckbox}}</div><div class="arsorsCookie_btnWrapper">{{deny}}{{allow}}</div></div>',
         htmlText: 'This website uses cookies. Some of these cookies require your explicit consent. Please agree to the use of cookies in order to use all functions of the website. Detailed information on the use of cookies can be found in our {{learnMore}}. Here you can also revoke your consent to the use of cookies.',
         learnMore: '<a href="{{learnMoreUrl}}" class="arsorsCookie_learnmore">{{learnMoreText}}</a>',
@@ -56,7 +57,7 @@ class ArsorsCookie {
 
     /* Append <scripts></scripts> */
     var elem = document.createElement('scripts');
-    document.body.appendChild(elem);
+    document.querySelectorAll(this.cookieConfig.c.appendSelector)[0].appendChild(elem);
     if (this.cookieConfig.c.dynamicAllow) this.dynamicAllowInteract = this.getCookie('arsorsCookie_interact');
 
     /* Init Cookies */
@@ -226,7 +227,7 @@ class ArsorsCookie {
     var elem = document.createElement('div');
     elem.innerHTML = content;
     if (this.getCookie("arsorsCookie_interact") !== "true") elem.className="arsorsCookie_wrapper ac_show"; else elem.className="arsorsCookie_wrapper ac_hide";
-    document.body.appendChild(elem);
+    document.querySelectorAll(this.cookieConfig.c.appendSelector)[0].appendChild(elem);
 
     this.initCookieEventListener("all");
   }
