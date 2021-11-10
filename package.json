@@ -1,10 +1,32 @@
 {
   "name": "arsorscookie",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "Arsors.Cookie has everything you expect from a Cookie Plugin. You have full control over the HTML markup and can change and expand it as you like. You can block specific JavaScript Files, iFrames and any Content you whish. Thanks to the modular system, you can also manage as many cookies as you like! The user has the freedom to accept or deny each cookie separately. You can fully customize Arsors.Cookie. It comes with three different types of privacy policies: Opt-In, Opt-Out & Info Modus.",
-  "main": "src/arsors.cookie.js",
+  "main": "dist/arsors.cookie.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build-module": "babel src/arsors.cookie.js -o dist/arsors.cookie.js",
+    "build-browser": "browserify src/arsors.cookie.browser.js -o dist/arsors.cookie.min.js -t [ babelify ] -p [minifyify --no-map]",
+    "build-style": "sass src/arsors.cookie.scss dist/arsors.cookie.min.css --style=compressed --no-source-map",
+    "build": "npm run build-module && npm run build-browser && npm run build-style",
+    "prepare": "npm run build"
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "edge": "12",
+            "firefox": "26",
+            "chrome": "33",
+            "safari": "9",
+            "ie": "9"
+          },
+          "useBuiltIns": "usage",
+          "corejs": "3"
+        }
+      ]
+    ]
   },
   "repository": {
     "type": "git",
@@ -33,6 +55,15 @@
   },
   "homepage": "https://github.com/arsors/arsorscookie#readme",
   "devDependencies": {
-    "core-js": "^3.6.5"
+    "@babel/cli": "^7.16.0",
+    "@babel/core": "^7.16.0",
+    "@babel/preset-env": "^7.16.0",
+    "babelify": "^10.0.0",
+    "browserify": "^17.0.0",
+    "minifyify": "^7.3.5",
+    "sass": "^1.43.4"
+  },
+  "dependencies": {
+    "core-js": "^3.19.1"
   }
 }

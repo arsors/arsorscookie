@@ -1,4 +1,4 @@
-class ArsorsCookie {
+export class ArsorsCookie {
 
   constructor(customConfig) {
     // check for deprecated functions
@@ -511,7 +511,7 @@ class ArsorsCookie {
 
 }
 
-class ArsorsCookieInitIFramesAndImages {
+export class ArsorsCookieInitIFramesAndImages {
   constructor() {
     var e = document.querySelectorAll('iframe,img,script');
     for (var i=0; i<e.length; i++) {
@@ -528,7 +528,7 @@ class ArsorsCookieInitIFramesAndImages {
 }
 
 // THX to youmightnotneedjquery.com
-class ArsorsDOMReady {
+export class ArsorsDOMReady {
   constructor(fn) {
     if (document.readyState != 'loading') {
       fn();
@@ -545,16 +545,3 @@ class ArsorsDOMReady {
 let refresh = new ArsorsDOMReady(() =>
     new ArsorsCookieInitIFramesAndImages()
 );
-
-// For node
-if (typeof exports === "object") {
-  module.exports = {
-    ArsorsCookie,
-    ArsorsDOMReady,
-    ArsorsCookieInitIFramesAndImages
-  }
-  // For browserify
-  global.ArsorsCookie = ArsorsCookie
-  global.ArsorsCookieInitIFramesAndImages = ArsorsCookieInitIFramesAndImages
-  global.ArsorsDOMReady = ArsorsDOMReady
-}
