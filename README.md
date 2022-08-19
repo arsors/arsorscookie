@@ -151,7 +151,7 @@ var myCookie = new ArsorsCookie({
 ```
 
 ### Custom HTML  
-You can adjust the complete HTML markup as you like and work with template variables `{{variableName}}` which you can also use nested. Your custom HTML is wrapped into a `div` which you can't change. It has the classes `arsorsCookie_wrapper` for identification and `ac_show` or `ac_hide` for the different visibility status of the cookie notice. Template variables are rendered recursively. That means you need to start with the property `html` in `c` and can add a custom property `myCustomText` in `c` as well. After that you can insert the content of `myCustomText` into the `html` property like this: `html: "<p>{{myCustomText}}</p>"`. Have a look below for an example.  
+You can adjust the complete HTML markup as you like and work with template variables `{{variableName}}` which you can also use nested. Your custom HTML is wrapped into a [`div`](https://www.scaler.com/topics/div-tag-in-html/) which you can't change. It has the classes `arsorsCookie_wrapper` for identification and `ac_show` or `ac_hide` for the different visibility status of the cookie notice. Template variables are rendered recursively. That means you need to start with the property `html` in `c` and can add a custom property `myCustomText` in `c` as well. After that you can insert the content of `myCustomText` into the `html` property like this: `html: "<p>{{myCustomText}}</p>"`. Have a look below for an example.  
 
 #### Cookie Notice  
 Create your custom cookie notice HTML with nested template variables.  
